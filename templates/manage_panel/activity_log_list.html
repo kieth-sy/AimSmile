@@ -1,0 +1,71 @@
+{% extends 'app_base.html' %}
+{% block page_title %}Activity Logs{% endblock %}
+{% block page_subtitle %}Sign-ins and important account and clinic changes{% endblock %}
+
+{% block app_content %}
+<div class="nm-header">
+  <div>
+    <h1 class="nm-title">Activity Logs</h1>
+    <div class="nm-subtitle">Recent sign-ins and important system changes</div>
+  </div>
+</div>
+
+<div class="card-app">
+  <form method="get" class="d-flex flex-wrap gap-2 align-items-center mb-3">
+    <input class="form-control-app" name="q" value="{{ search }}"
+           placeholder="Search user, event, or IP" aria-label="Search activity logs"
+           style="max-width:280px;">
+    <select name="action" class="form-control-app select-app"
+            aria-label="Filter by event" style="max-width:240px;">
+      <option value="">All events</option>
+      {% for value, label in action_choices %}
+      <option value="{{ value }}" {% if selected_action == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn-app" type="submit"><i class="bi bi-search"></i> Filter</button>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table-app">
+      <thead>
+        <tr><th>Date and time</th><th>User</th><th>Event</th><th>Details</th><th>IP address</th></tr>
+      </thead>
+      <tbody>
+      {% for entry in page_obj %}
+        <tr>
+          <td class="text-nowrap">{{ entry.created_at|date:"M j, Y, g:i a" }}</td>
+          <td>{{ entry.actor_username|default:"Unauthenticated / unknown" }}</td>
+          <td>{{ entry.get_action_display }}</td>
+          <td>
+            {{ entry.summary }}
+            {% if entry.target_type %}
+              <span class="d-block small muted">
+                {{ entry.target_type }}{% if entry.target_id %} #{{ entry.target_id }}{% endif %}
+                {% if entry.target_label %} · {{ entry.target_label }}{% endif %}
+              </span>
+            {% endif %}
+          </td>
+          <td>{{ entry.ip_address|default:"—" }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" class="text-center muted py-4">No activity logs match this filter.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.paginator.num_pages > 1 %}
+  <nav class="d-flex justify-content-between align-items-center mt-3" aria-label="Activity log pages">
+    <span class="small muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    <div class="d-flex gap-2">
+      {% if page_obj.has_previous %}
+      <a class="btn-ghost" href="?page={{ page_obj.previous_page_number }}&q={{ search|urlencode }}&action={{ selected_action|urlencode }}">Previous</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+      <a class="btn-ghost" href="?page={{ page_obj.next_page_number }}&q={{ search|urlencode }}&action={{ selected_action|urlencode }}">Next</a>
+      {% endif %}
+    </div>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

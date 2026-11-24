@@ -1,0 +1,540 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% if identity_enrollment %}Patient Identity Enrollment{% else %}Patient Identity Verification{% endif %} · AimSmile{% endblock %}
+{% block head_extra %}
+<link href="{% static 'css/pages/identity_signup.css' %}?v=3" rel="stylesheet">
+{% if recaptcha_enabled %}<script src="https://www.google.com/recaptcha/api.js" async defer></script>{% endif %}
+{% endblock %}
+{% block body %}
+<main class="identity-wrap">
+  <div class="identity-topbar">
+    <a class="identity-brand" href="{% url 'pages:home' %}">
+      <img src="{% static 'img/aimsmile_logo.png' %}" alt="">
+      <span>Aim<span>Smile</span></span>
+    </a>
+    {% if identity_enrollment %}
+    <a class="identity-back-link" href="{% url 'accounts:profile' %}"><i class="bi bi-arrow-left"></i> Back to profile</a>
+    {% else %}
+    <a class="identity-back-link" href="{% url 'pages:home' %}"><i class="bi bi-arrow-left"></i> Back to home</a>
+    {% endif %}
+  </div>
+  <section class="identity-card">
+    <header class="identity-header">
+      <span class="identity-header-icon"><i class="bi bi-shield-check"></i></span>
+      <div>
+        <p class="identity-eyebrow">{% if identity_enrollment %}Patient account security{% else %}Secure patient registration{% endif %}</p>
+        <h1>{% if identity_enrollment %}Identity enrollment{% else %}Create your patient account{% endif %}</h1>
+        <p>{% if identity_enrollment %}Confirm your identity to help the clinic detect duplicate patient accounts.{% else %}Complete a few secure steps to verify your identity and create your account.{% endif %}</p>
+      </div>
+    </header>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }}" role="status">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if identity_enrollment and identity_enrolled %}
+      <div class="identity-alert" role="status">
+        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+        <span>Your protected ID fingerprint and encrypted face template are enrolled for duplicate-patient checks. Original ID and face images are not retained.</span>
+      </div>
+      <form method="post" action="{% url 'accounts:identity_enrollment_delete' %}">
+        {% csrf_token %}
+        <button class="btn-ghost btn-delete-action" type="submit"><i class="bi bi-trash3"></i> Remove my duplicate-check data</button>
+      </form>
+      <a class="btn-app mt-3" href="{% url 'accounts:profile' %}"><i class="bi bi-person-circle"></i> Return to profile</a>
+    {% elif identity_verified %}
+      <div class="identity-steps" role="list" aria-label="Registration progress">
+        <div class="identity-step done" role="listitem"><span class="identity-step-number"><i class="bi bi-check2"></i></span><span class="identity-step-label"><small>Step 1</small><strong>ID details</strong></span></div>
+        <div class="identity-step done" role="listitem"><span class="identity-step-number"><i class="bi bi-check2"></i></span><span class="identity-step-label"><small>Step 2</small><strong>Face match</strong></span></div>
+        <div class="identity-step active" role="listitem" aria-current="step"><span class="identity-step-number">3</span><span class="identity-step-label"><small>Step 3</small><strong>Your account</strong></span></div>
+      </div>
+      <div class="identity-alert" role="status">
+        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+        <span>ID and face check complete. Review the extracted details, then enter your account information.</span>
+      </div>
+      <div class="identity-field-grid mb-4">
+        <div class="identity-field"><span>Government ID type</span><strong>{{ identity_id_type }}</strong></div>
+        <div class="identity-field"><span>ID number <small>(not stored in readable form)</small></span><strong>{{ identity_fields.id_number }}</strong></div>
+        {% if identity_fields.expiration_date %}
+        <div class="identity-field"><span>Expiration date</span><strong>{{ identity_fields.expiration_date }}</strong></div>
+        {% endif %}
+        <div class="identity-field"><span>Age</span><strong id="calculatedAge">Check date of birth below</strong></div>
+      </div>
+      <form method="post" autocomplete="on">
+        {% csrf_token %}
+        <input type="hidden" name="identity_proof" value="{{ identity_proof_token }}">
+        <div class="identity-section-heading">
+          <span class="identity-section-icon"><i class="bi bi-person-vcard"></i></span>
+          <div><h2>Your account details</h2><p>Use an email address and phone number the clinic can reach.</p></div>
+        </div>
+        <div class="identity-account-fields">
+          {% include 'partials/_form.html' with form=form %}
+        </div>
+        {% if recaptcha_enabled %}
+        <div class="g-recaptcha my-3" data-sitekey="{{ recaptcha_site_key }}" aria-label="Complete reCAPTCHA verification"></div>
+        {% endif %}
+        <label class="identity-consent mb-3">
+          <input class="form-check-input-app mt-1" type="checkbox" name="duplicate_check_consent" value="true" required>
+          <span>I consent to retaining a keyed fingerprint of my ID number and an encrypted face template for duplicate-patient checks. Original ID and face images are discarded. I understand this check is approximate and can be wrong.</span>
+        </label>
+        <p class="identity-disclaimer"><i class="bi bi-info-circle"></i> OCR and face matching can make mistakes and do not authenticate the government ID. You may remove your duplicate-check data later from your profile.</p>
+        <button class="btn-app identity-submit" type="submit"><i class="bi bi-shield-check"></i> Submit registration for approval</button>
+      </form>
+      <script>
+      (function () {
+        const dob = document.getElementById('id_date_of_birth');
+        const output = document.getElementById('calculatedAge');
+        function updateAge() {
+          if (!dob || !dob.value || !output) return;
+          const birth = new Date(dob.value + 'T00:00:00');
+          const today = new Date();
+          let age = today.getFullYear() - birth.getFullYear();
+          if (today.getMonth() < birth.getMonth() ||
+              (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())) age--;
+          output.textContent = age >= 0 ? age + ' years' : 'Invalid date';
+        }
+        if (dob) dob.addEventListener('change', updateAge);
+        updateAge();
+      })();
+      </script>
+    {% else %}
+      <div class="identity-steps" role="list" aria-label="Registration progress">
+        <div class="identity-step active" id="stepIdLabel" role="listitem" aria-current="step"><span class="identity-step-number">1</span><span class="identity-step-label"><small>Step 1</small><strong>Verify ID</strong></span></div>
+        <div class="identity-step" id="stepFaceLabel" role="listitem"><span class="identity-step-number">2</span><span class="identity-step-label"><small>Step 2</small><strong>Face match</strong></span></div>
+        <div class="identity-step" role="listitem"><span class="identity-step-number">3</span><span class="identity-step-label"><small>Step 3</small><strong>{% if identity_enrollment %}Finish enrollment{% else %}Create account{% endif %}</strong></span></div>
+      </div>
+
+      <section id="idStep">
+        <div class="identity-section-heading">
+          <span class="identity-section-icon"><i class="bi bi-card-heading"></i></span>
+          <div>
+            <h2>Upload a government ID</h2>
+            <p>Use a clear, well-lit photo showing the full ID and its portrait.</p>
+          </div>
+        </div>
+        <div class="identity-alert identity-warning">
+          <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+          <span>This check reads the ID and compares faces; it does not confirm that an ID is genuine or unaltered.</span>
+        </div>
+        <form id="idUploadForm" data-scan-url="{% if identity_enrollment %}{% url 'accounts:identity_enrollment_scan_id' %}{% else %}{% url 'accounts:identity_scan_id' %}{% endif %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="identity-upload-field">
+            <label class="form-label-app" for="id_type">Government ID type</label>
+            <select class="form-control-app select-app" id="id_type" name="id_type">
+              <option value="">Detect automatically</option>
+              {% for value,label in supported_id_types %}
+              <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+            <p class="identity-upload-hint">The scanner detects supported IDs automatically. Choose a type here only if automatic detection cannot identify your ID.</p>
+          </div>
+          <div class="identity-upload-field">
+            <label class="form-label-app" for="id_image">ID photo</label>
+            <input class="form-control-app" id="id_image" name="id_image" type="file" accept="image/jpeg,image/png" aria-describedby="idFileHint idFileName" required>
+            <p class="identity-upload-hint" id="idFileHint">JPEG or PNG · Maximum 5 MB · Include all four edges of the ID.</p>
+            <div class="identity-file-name" id="idFileName" aria-live="polite"><i class="bi bi-file-earmark-image"></i><span>No photo selected yet</span></div>
+          </div>
+          <div class="identity-consents">
+            <label class="identity-consent">
+              <input class="form-check-input-app" type="checkbox" name="biometric_consent" value="true" required>
+              <span>I agree to local OCR and face processing for this check. The original ID and face images are not retained.</span>
+            </label>
+            <label class="identity-consent">
+              <input class="form-check-input-app" type="checkbox" name="duplicate_check_consent" value="true" required>
+              <span>I agree to retaining a protected ID-number fingerprint and encrypted face template for duplicate-patient checks. I can remove this data later from my profile.</span>
+            </label>
+          </div>
+          <button class="btn-app identity-submit" type="submit" id="scanButton"><i class="bi bi-card-checklist"></i> <span id="scanButtonLabel">Scan ID</span></button>
+        </form>
+        <div class="identity-feedback" id="scanFeedback" aria-live="polite" role="status"></div>
+        <button class="btn-app identity-continue" id="continueToFace" type="button" hidden><i class="bi bi-arrow-right-circle"></i> Continue to face verification</button>
+      </section>
+
+      <section id="faceStep" hidden data-match-url="{% if identity_enrollment %}{% url 'accounts:identity_enrollment_match_face' %}{% else %}{% url 'accounts:identity_match_face' %}{% endif %}">
+        <div class="identity-section-heading">
+          <span class="identity-section-icon"><i class="bi bi-camera"></i></span>
+          <div>
+            <h2>Face Recognition</h2>
+            <p>Follow the five-step guide and capture one image for each pose.</p>
+          </div>
+        </div>
+        <div class="identity-guide" aria-label="Face capture instructions">
+          <div class="identity-guide-heading">
+            <div class="identity-guide-title">
+              <span class="identity-guide-icon" aria-hidden="true"><i class="bi bi-person-bounding-box"></i></span>
+              <div><strong>Follow these steps</strong><span>Keep your face centered and clearly visible.</span></div>
+            </div>
+            <span class="identity-guide-badge">5-Step Guide</span>
+          </div>
+          <ol class="identity-guide-grid" id="poseGuide" aria-label="Five face capture poses">
+            <li class="identity-guide-card is-active" aria-current="step">
+              <span class="identity-guide-number">1</span>
+              <strong class="identity-guide-label">Front View</strong>
+              <span class="identity-guide-visual" aria-hidden="true"><i class="bi bi-person-bounding-box"></i></span>
+              <span class="identity-guide-instruction">Look straight at the camera.</span>
+            </li>
+            <li class="identity-guide-card">
+              <span class="identity-guide-number">2</span>
+              <strong class="identity-guide-label">Turn Left</strong>
+              <span class="identity-guide-visual" aria-hidden="true"><i class="bi bi-arrow-left"></i><i class="bi bi-person-fill"></i></span>
+              <span class="identity-guide-instruction">Slowly turn your head to your left.</span>
+            </li>
+            <li class="identity-guide-card">
+              <span class="identity-guide-number">3</span>
+              <strong class="identity-guide-label">Turn Right</strong>
+              <span class="identity-guide-visual" aria-hidden="true"><i class="bi bi-person-fill"></i><i class="bi bi-arrow-right"></i></span>
+              <span class="identity-guide-instruction">Slowly turn your head to your right.</span>
+            </li>
+            <li class="identity-guide-card">
+              <span class="identity-guide-number">4</span>
+              <strong class="identity-guide-label">Look Near</strong>
+              <span class="identity-guide-visual" aria-hidden="true"><i class="bi bi-zoom-in"></i></span>
+              <span class="identity-guide-instruction">Move closer, about 30 cm away.</span>
+            </li>
+            <li class="identity-guide-card">
+              <span class="identity-guide-number">5</span>
+              <strong class="identity-guide-label">Look Far</strong>
+              <span class="identity-guide-visual" aria-hidden="true"><i class="bi bi-zoom-out"></i></span>
+              <span class="identity-guide-instruction">Move farther, about 50–80 cm away.</span>
+            </li>
+          </ol>
+          <ul class="identity-guide-tips" aria-label="Face scan tips">
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Keep your face well lit</span></li>
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Remove hats, sunglasses, or masks</span></li>
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Look directly at the camera</span></li>
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Follow each step's prompt</span></li>
+          </ul>
+          <p class="identity-guide-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Distance guidance is approximate; the camera does not measure distance.</p>
+        </div>
+        <div class="identity-readout" id="facePrompt" aria-live="polite">Start the camera when ready.</div>
+        <div class="identity-pose-status"><span id="poseCounter">0 of 5 poses captured</span><span>Keep your full face in view</span></div>
+        <div class="identity-pose-track" role="progressbar" aria-label="Face capture progress" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="poseProgressTrack"><div class="identity-pose-progress" id="poseProgressBar"></div></div>
+        <div class="identity-camera">
+          <video id="faceVideo" autoplay playsinline muted aria-label="Live camera preview"></video>
+          <div class="identity-camera-empty" id="cameraPlaceholder"><i class="bi bi-camera-video"></i><strong>Camera preview</strong><span>Start the camera when you are ready.</span></div>
+          <div class="identity-camera-overlay" id="cameraGuide" aria-hidden="true" hidden>
+            <div class="identity-camera-guide-top">
+              <span><span id="cameraGuideStep">STEP 1</span> OF 5</span>
+              <strong id="cameraGuideTitle">Front View</strong>
+            </div>
+            <div class="identity-camera-frame" id="cameraGuideFrame" data-pose="front" aria-hidden="true">
+              <span class="identity-camera-corner top-left"></span>
+              <span class="identity-camera-corner top-right"></span>
+              <span class="identity-camera-corner bottom-left"></span>
+              <span class="identity-camera-corner bottom-right"></span>
+            </div>
+            <div class="identity-camera-guide-bottom">
+              <div class="identity-camera-action">
+                <i class="bi bi-eye" id="cameraGuideIcon"></i>
+                <strong id="cameraGuideInstruction">Look straight at the camera.</strong>
+              </div>
+              <span class="identity-camera-distance" id="cameraGuideDistance" hidden></span>
+            </div>
+          </div>
+        </div>
+        <div class="identity-actions">
+          <button class="btn-ghost" id="startCamera" type="button"><i class="bi bi-camera-video"></i> Enable camera</button>
+          <button class="btn-app" id="capturePose" type="button" disabled><i class="bi bi-camera"></i> Capture this pose</button>
+          <button class="btn-ghost" id="retakePoses" type="button" hidden><i class="bi bi-arrow-counterclockwise"></i> Retake all poses</button>
+          <button class="btn-ghost" id="backToId" type="button"><i class="bi bi-arrow-left"></i> Change ID photo</button>
+        </div>
+        <canvas id="faceCanvas" hidden></canvas>
+        <div class="identity-feedback" id="faceFeedback" aria-live="polite" role="status"></div>
+      </section>
+      <p class="identity-disclaimer mt-4"><i class="bi bi-lock"></i> Face matching is an estimate, not proof of identity or liveness. Original images are processed on this server and are not saved; only the consented protected template is retained.</p>
+    {% endif %}
+  </section>
+</main>
+{% if not identity_verified and not identity_enrolled %}
+<script>
+(function () {
+  const idForm = document.getElementById('idUploadForm');
+  const idStep = document.getElementById('idStep');
+  const faceStep = document.getElementById('faceStep');
+  const fileInput = document.getElementById('id_image');
+  const idTypeSelect = document.getElementById('id_type');
+  const fileName = document.getElementById('idFileName');
+  const scanButtonLabel = document.getElementById('scanButtonLabel');
+  const scanButton = document.getElementById('scanButton');
+  const scanFeedback = document.getElementById('scanFeedback');
+  const continueButton = document.getElementById('continueToFace');
+  const faceVideo = document.getElementById('faceVideo');
+  const faceCanvas = document.getElementById('faceCanvas');
+  const cameraGuide = document.getElementById('cameraGuide');
+  const cameraGuideStep = document.getElementById('cameraGuideStep');
+  const cameraGuideTitle = document.getElementById('cameraGuideTitle');
+  const cameraGuideFrame = document.getElementById('cameraGuideFrame');
+  const cameraGuideIcon = document.getElementById('cameraGuideIcon');
+  const cameraGuideInstruction = document.getElementById('cameraGuideInstruction');
+  const cameraGuideDistance = document.getElementById('cameraGuideDistance');
+  const startCameraButton = document.getElementById('startCamera');
+  const captureButton = document.getElementById('capturePose');
+  const retakeButton = document.getElementById('retakePoses');
+  const facePrompt = document.getElementById('facePrompt');
+  const faceFeedback = document.getElementById('faceFeedback');
+  const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+  const poseCounter = document.getElementById('poseCounter');
+  const poseProgressTrack = document.getElementById('poseProgressTrack');
+  const poseProgressBar = document.getElementById('poseProgressBar');
+  const poseGuideItems = Array.from(document.querySelectorAll('#poseGuide .identity-guide-card'));
+  const backToIdButton = document.getElementById('backToId');
+  const steps = [
+    {
+      label: 'Front View',
+      prompt: 'Face forward and look straight at the camera.',
+      instruction: 'Look straight at the camera.',
+      icon: 'bi-eye',
+      pose: 'front',
+      distance: ''
+    },
+    {
+      label: 'Turn Left',
+      prompt: 'Slowly turn your head to your left.',
+      instruction: 'Slowly turn your head to your left.',
+      icon: 'bi-arrow-left',
+      pose: 'left',
+      distance: ''
+    },
+    {
+      label: 'Turn Right',
+      prompt: 'Slowly turn your head to your right.',
+      instruction: 'Slowly turn your head to your right.',
+      icon: 'bi-arrow-right',
+      pose: 'right',
+      distance: ''
+    },
+    {
+      label: 'Look Near',
+      prompt: 'Move closer until you are about 30 cm from the camera.',
+      instruction: 'Move closer to the camera.',
+      icon: 'bi-zoom-in',
+      pose: 'near',
+      distance: 'Approx. 30 cm'
+    },
+    {
+      label: 'Look Far',
+      prompt: 'Move farther away until you are about 50–80 cm from the camera.',
+      instruction: 'Move farther away from the camera.',
+      icon: 'bi-zoom-out',
+      pose: 'far',
+      distance: 'Approx. 50–80 cm'
+    }
+  ];
+  let idFile = null;
+  let scanToken = '';
+  let stream = null;
+  let capturedPoses = [];
+  let poseIndex = 0;
+
+  function updatePoseProgress() {
+    poseCounter.textContent = poseIndex + ' of ' + steps.length + ' poses captured';
+    poseProgressTrack.setAttribute('aria-valuenow', String(poseIndex));
+    poseProgressBar.style.width = (poseIndex / steps.length * 100) + '%';
+    const activeStepIndex = Math.min(poseIndex, steps.length - 1);
+    const activeStep = steps[activeStepIndex];
+    cameraGuideStep.textContent = 'STEP ' + (activeStepIndex + 1);
+    cameraGuideTitle.textContent = activeStep.label;
+    cameraGuideFrame.dataset.pose = activeStep.pose;
+    cameraGuideIcon.className = 'bi ' + activeStep.icon;
+    cameraGuideInstruction.textContent = activeStep.instruction;
+    cameraGuideDistance.hidden = !activeStep.distance;
+    cameraGuideDistance.textContent = activeStep.distance;
+    poseGuideItems.forEach(function (item, index) {
+      const completed = index < poseIndex;
+      const active = index === Math.min(poseIndex, poseGuideItems.length - 1) && poseIndex < steps.length;
+      item.classList.toggle('is-done', completed);
+      item.classList.toggle('is-active', active);
+      if (active) item.setAttribute('aria-current', 'step');
+      else item.removeAttribute('aria-current');
+    });
+  }
+
+  function showFeedback(element, text, isError) {
+    element.textContent = text;
+    element.className = 'identity-feedback ' + (isError ? 'text-danger' : 'text-success');
+  }
+
+  fileInput.addEventListener('change', function () {
+    const file = fileInput.files[0];
+    idFile = null;
+    scanToken = '';
+    continueButton.hidden = true;
+    showFeedback(scanFeedback, '', false);
+    if (!file) {
+      fileName.classList.remove('is-visible');
+      fileName.querySelector('span').textContent = 'No photo selected yet';
+      return;
+    }
+    const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+    fileName.querySelector('span').textContent = file.name + ' · ' + sizeMb + ' MB';
+    fileName.classList.add('is-visible');
+  });
+
+  async function readResponse(response) {
+    let data;
+    try { data = await response.json(); }
+    catch (error) { throw new Error('The server returned an unreadable response.'); }
+    if (!response.ok || !data.ok) {
+      const missing = Array.isArray(data.missing_fields) && data.missing_fields.length
+        ? ' Missing: ' + data.missing_fields.join(', ') + '.'
+        : '';
+      throw new Error((data.message || 'Verification failed. Please retry.') + missing);
+    }
+    return data;
+  }
+
+  idForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    scanButton.disabled = true;
+    scanButton.setAttribute('aria-busy', 'true');
+    scanButtonLabel.textContent = 'Scanning ID…';
+    continueButton.hidden = true;
+    idFile = null;
+    scanToken = '';
+    showFeedback(scanFeedback, 'Reading the ID photo securely…', false);
+    try {
+      const response = await fetch(idForm.dataset.scanUrl, {
+        method: 'POST',
+        body: new FormData(idForm),
+        credentials: 'same-origin'
+      });
+      const result = await readResponse(response);
+      idFile = fileInput.files[0];
+      scanToken = result.scan_token;
+      idTypeSelect.value = result.id_type;
+      showFeedback(scanFeedback, result.message, false);
+      continueButton.hidden = false;
+    } catch (error) {
+      showFeedback(scanFeedback, error.message, true);
+      continueButton.hidden = true;
+    } finally {
+      scanButton.disabled = false;
+      scanButton.removeAttribute('aria-busy');
+      scanButtonLabel.textContent = 'Scan ID';
+    }
+  });
+
+  continueButton.addEventListener('click', function () {
+    idStep.hidden = true;
+    faceStep.hidden = false;
+    document.getElementById('stepIdLabel').className = 'identity-step done';
+    document.getElementById('stepFaceLabel').className = 'identity-step active';
+    document.getElementById('stepIdLabel').removeAttribute('aria-current');
+    document.getElementById('stepFaceLabel').setAttribute('aria-current', 'step');
+    facePrompt.textContent = steps[0].prompt;
+  });
+
+  function stopCamera() {
+    if (stream) stream.getTracks().forEach(function (track) { track.stop(); });
+    stream = null;
+    faceVideo.srcObject = null;
+    cameraGuide.hidden = true;
+    captureButton.disabled = true;
+    startCameraButton.disabled = false;
+    cameraPlaceholder.hidden = false;
+  }
+
+  startCameraButton.addEventListener('click', async function () {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      showFeedback(faceFeedback, 'Camera capture is not supported by this browser.', true);
+      return;
+    }
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 960 } },
+        audio: false
+      });
+      faceVideo.srcObject = stream;
+      await faceVideo.play();
+      cameraPlaceholder.hidden = true;
+      cameraGuide.hidden = false;
+      updatePoseProgress();
+      captureButton.disabled = false;
+      startCameraButton.disabled = true;
+      facePrompt.textContent = steps[poseIndex].prompt;
+      showFeedback(faceFeedback, 'Camera ready. Make sure your full face is visible and well lit.', false);
+    } catch (error) {
+      showFeedback(faceFeedback, 'Camera access was denied or unavailable. Check browser permissions and retry.', true);
+    }
+  });
+
+  async function submitFaceMatch() {
+    const matchForm = new FormData();
+    matchForm.append('csrfmiddlewaretoken', idForm.querySelector('[name=csrfmiddlewaretoken]').value);
+    matchForm.append('scan_token', scanToken);
+    matchForm.append('id_image', idFile, idFile.name);
+    matchForm.append('selfie_front', capturedPoses[0], 'selfie-front.jpg');
+    ['selfie_left', 'selfie_right', 'selfie_closer', 'selfie_farther'].forEach(function (name, index) {
+      matchForm.append(name, capturedPoses[index + 1], name + '.jpg');
+    });
+    showFeedback(faceFeedback, 'Checking the face locally against the ID portrait…', false);
+    try {
+      const response = await fetch(faceStep.dataset.matchUrl, {
+        method: 'POST',
+        body: matchForm,
+        credentials: 'same-origin'
+      });
+      const result = await readResponse(response);
+      showFeedback(faceFeedback, result.message + ' Reloading the personal information form…', false);
+      setTimeout(function () { window.location.reload(); }, 900);
+    } catch (error) {
+      showFeedback(faceFeedback, error.message, true);
+      retakeButton.hidden = false;
+    }
+  }
+
+  captureButton.addEventListener('click', function () {
+    if (!faceVideo.videoWidth || !faceVideo.videoHeight || !idFile) {
+      showFeedback(faceFeedback, 'Start the camera and scan the ID again.', true);
+      return;
+    }
+    faceCanvas.width = faceVideo.videoWidth;
+    faceCanvas.height = faceVideo.videoHeight;
+    faceCanvas.getContext('2d').drawImage(faceVideo, 0, 0, faceCanvas.width, faceCanvas.height);
+    faceCanvas.toBlob(function (blob) {
+      if (!blob) {
+        showFeedback(faceFeedback, 'The face image could not be captured. Please retry.', true);
+        return;
+      }
+      capturedPoses.push(blob);
+      poseIndex += 1;
+      updatePoseProgress();
+      if (poseIndex < steps.length) {
+        facePrompt.textContent = steps[poseIndex].prompt;
+        showFeedback(faceFeedback, 'Pose ' + poseIndex + ' of ' + steps.length + ' captured.', false);
+        return;
+      }
+      stopCamera();
+      captureButton.disabled = true;
+      submitFaceMatch();
+    }, 'image/jpeg', 0.92);
+  });
+
+  retakeButton.addEventListener('click', async function () {
+    capturedPoses = [];
+    poseIndex = 0;
+    updatePoseProgress();
+    retakeButton.hidden = true;
+    facePrompt.textContent = steps[0].prompt;
+    await startCameraButton.click();
+  });
+
+  backToIdButton.addEventListener('click', function () {
+    stopCamera();
+    capturedPoses = [];
+    poseIndex = 0;
+    updatePoseProgress();
+    faceStep.hidden = true;
+    idStep.hidden = false;
+    document.getElementById('stepIdLabel').className = 'identity-step active';
+    document.getElementById('stepFaceLabel').className = 'identity-step';
+    document.getElementById('stepIdLabel').setAttribute('aria-current', 'step');
+    document.getElementById('stepFaceLabel').removeAttribute('aria-current');
+  });
+  updatePoseProgress();
+})();
+</script>
+{% endif %}
+{% endblock %}

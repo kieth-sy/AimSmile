@@ -1,0 +1,11 @@
+Django>=5.2,<6.1
+Pillow>=10.0
+opencv-contrib-python-headless>=4.10,<5
+pytesseract>=0.3.13
+python-dateutil>=2.9
+python-dotenv>=1.0
+PyMySQL>=1.1.1,<2
+boto3>=1.35
+cryptography>=44
+google-api-python-client>=2.150
+google-auth-oauthlib>=1.2

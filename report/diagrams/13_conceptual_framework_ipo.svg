@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="920" viewBox="0 0 1600 920" role="img" aria-labelledby="title desc">
+  <title id="title">Dental Clinic Management System Input Process Output framework</title>
+  <desc id="desc">The IPO framework maps user and clinic data through authentication, validation, workflow, calculation, and reporting processes into role-specific records and outputs.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#2563eb"/></marker>
+    <style>
+      text{font-family:Inter,"Segoe UI",Arial,sans-serif;fill:#17243b}
+      .title{font-size:34px;font-weight:800;letter-spacing:-.7px}
+      .subtitle{font-size:16px;fill:#64748b}
+      .panel{stroke-width:2}
+      .panelhead{font-size:22px;font-weight:800}
+      .caption{font-size:13px;font-weight:700;letter-spacing:1.2px}
+      .cardtitle{font-size:16px;font-weight:800}
+      .body{font-size:14px;fill:#475569}
+      .bullet{fill:#2563eb}
+    </style>
+  </defs>
+  <rect width="1600" height="920" fill="#f8fafc"/>
+  <text class="title" x="800" y="58" text-anchor="middle">Conceptual Framework · Input–Process–Output</text>
+  <text class="subtitle" x="800" y="88" text-anchor="middle">How users and clinic data are transformed into operational records and decision-support outputs</text>
+
+  <rect class="panel" x="55" y="145" width="430" height="660" rx="26" fill="#eff6ff" stroke="#93c5fd"/>
+  <rect x="55" y="145" width="430" height="88" rx="26" fill="#dbeafe"/>
+  <path d="M55 207 V233 H485 V207" fill="#dbeafe"/>
+  <text class="caption" x="88" y="180" fill="#1d4ed8">01</text>
+  <text class="panelhead" x="88" y="211">INPUT</text>
+  <text class="body" x="88" y="259">People and information entering the system</text>
+
+  <g>
+    <rect x="86" y="292" width="368" height="94" rx="17" fill="#fff" stroke="#bfdbfe"/>
+    <circle cx="116" cy="327" r="13" fill="#dbeafe"/><text x="116" y="332" text-anchor="middle" font-size="13" font-weight="800" fill="#2563eb">1</text>
+    <text class="cardtitle" x="142" y="329">Users &amp; access</text>
+    <text class="body" x="142" y="355">Patient, dentist, receptionist, administrator</text>
+    <text class="body" x="142" y="376">Profiles, credentials and role permissions</text>
+
+    <rect x="86" y="405" width="368" height="94" rx="17" fill="#fff" stroke="#bfdbfe"/>
+    <circle cx="116" cy="440" r="13" fill="#dbeafe"/><text x="116" y="445" text-anchor="middle" font-size="13" font-weight="800" fill="#2563eb">2</text>
+    <text class="cardtitle" x="142" y="442">Appointment &amp; care data</text>
+    <text class="body" x="142" y="468">Services, schedule, tooth and treatment</text>
+    <text class="body" x="142" y="489">Prescription and patient history details</text>
+
+    <rect x="86" y="518" width="368" height="94" rx="17" fill="#fff" stroke="#bfdbfe"/>
+    <circle cx="116" cy="553" r="13" fill="#dbeafe"/><text x="116" y="558" text-anchor="middle" font-size="13" font-weight="800" fill="#2563eb">3</text>
+    <text class="cardtitle" x="142" y="555">Clinic operations</text>
+    <text class="body" x="142" y="581">Invoices, payments, stock and reviews</text>
+    <text class="body" x="142" y="602">Contact inquiries and admin updates</text>
+
+    <rect x="86" y="631" width="368" height="94" rx="17" fill="#fff" stroke="#bfdbfe"/>
+    <circle cx="116" cy="666" r="13" fill="#dbeafe"/><text x="116" y="671" text-anchor="middle" font-size="13" font-weight="800" fill="#2563eb">4</text>
+    <text class="cardtitle" x="142" y="668">Optional verification inputs</text>
+    <text class="body" x="142" y="694">ID image and face captures (request only)</text>
+    <text class="body" x="142" y="715">Provider credentials for enabled integrations</text>
+  </g>
+
+  <rect class="panel" x="585" y="145" width="430" height="660" rx="26" fill="#ecfdf5" stroke="#86efac"/>
+  <rect x="585" y="145" width="430" height="88" rx="26" fill="#d1fae5"/>
+  <path d="M585 207 V233 H1015 V207" fill="#d1fae5"/>
+  <text class="caption" x="618" y="180" fill="#047857">02</text>
+  <text class="panelhead" x="618" y="211">PROCESS</text>
+  <text class="body" x="618" y="259">Application rules applied to submitted data</text>
+
+  <g>
+    <rect x="616" y="292" width="368" height="94" rx="17" fill="#fff" stroke="#a7f3d0"/>
+    <text class="cardtitle" x="642" y="329">Authenticate &amp; authorize</text>
+    <text class="body" x="642" y="355">Validate account, role and consent requirements</text>
+    <text class="body" x="642" y="376">Record sign-in and selected activity events</text>
+
+    <rect x="616" y="405" width="368" height="94" rx="17" fill="#fff" stroke="#a7f3d0"/>
+    <text class="cardtitle" x="642" y="442">Manage clinic workflows</text>
+    <text class="body" x="642" y="468">Create, read and update related records</text>
+    <text class="body" x="642" y="489">Keep patient, appointment and care data linked</text>
+
+    <rect x="616" y="518" width="368" height="94" rx="17" fill="#fff" stroke="#a7f3d0"/>
+    <text class="cardtitle" x="642" y="555">Calculate &amp; summarize</text>
+    <text class="body" x="642" y="581">Invoice total, 50% downpayment and balance</text>
+    <text class="body" x="642" y="602">Confirmed payments, revenue, visits and growth</text>
+
+    <rect x="616" y="631" width="368" height="94" rx="17" fill="#fff" stroke="#a7f3d0"/>
+    <text class="cardtitle" x="642" y="668">Apply local decision rules</text>
+    <text class="body" x="642" y="694">OCR and face similarity support registration</text>
+    <text class="body" x="642" y="715">Informational assistant is rule-based, not diagnosis</text>
+  </g>
+
+  <rect class="panel" x="1115" y="145" width="430" height="660" rx="26" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <rect x="1115" y="145" width="430" height="88" rx="26" fill="#ede9fe"/>
+  <path d="M1115 207 V233 H1545 V207" fill="#ede9fe"/>
+  <text class="caption" x="1148" y="180" fill="#6d28d9">03</text>
+  <text class="panelhead" x="1148" y="211">OUTPUT</text>
+  <text class="body" x="1148" y="259">Records and information for authorized users</text>
+
+  <g>
+    <rect x="1146" y="292" width="368" height="94" rx="17" fill="#fff" stroke="#ddd6fe"/>
+    <text class="cardtitle" x="1172" y="329">Role-specific portal views</text>
+    <text class="body" x="1172" y="355">Patient, dentist, receptionist and admin pages</text>
+    <text class="body" x="1172" y="376">Each role sees its permitted workflows</text>
+
+    <rect x="1146" y="405" width="368" height="94" rx="17" fill="#fff" stroke="#ddd6fe"/>
+    <text class="cardtitle" x="1172" y="442">Clinic records</text>
+    <text class="body" x="1172" y="468">Appointments, care plans, prescriptions</text>
+    <text class="body" x="1172" y="489">Invoices, payment history and inventory status</text>
+
+    <rect x="1146" y="518" width="368" height="94" rx="17" fill="#fff" stroke="#ddd6fe"/>
+    <text class="cardtitle" x="1172" y="555">Dashboards &amp; reports</text>
+    <text class="body" x="1172" y="581">Revenue, appointment and patient summaries</text>
+    <text class="body" x="1172" y="602">Treatment, low-stock and activity-log views</text>
+
+    <rect x="1146" y="631" width="368" height="94" rx="17" fill="#fff" stroke="#ddd6fe"/>
+    <text class="cardtitle" x="1172" y="668">Patient-facing responses</text>
+    <text class="body" x="1172" y="694">Booking status, bills and informational guidance</text>
+    <text class="body" x="1172" y="715">Contact replies via email when SMTP is configured</text>
+  </g>
+
+  <path d="M490 474 H570" stroke="#2563eb" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1020 474 H1100" stroke="#2563eb" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <rect x="467" y="437" width="126" height="28" rx="14" fill="#fff" stroke="#dbe4f0"/>
+  <text x="530" y="456" text-anchor="middle" font-size="12" font-weight="800" fill="#2563eb">VALIDATE</text>
+  <rect x="997" y="437" width="126" height="28" rx="14" fill="#fff" stroke="#dbe4f0"/>
+  <text x="1060" y="456" text-anchor="middle" font-size="12" font-weight="800" fill="#2563eb">GENERATE</text>
+
+  <text x="800" y="866" text-anchor="middle" font-size="13" fill="#64748b">The IPO summarizes the implemented application flow; optional providers and identity checks require configuration and user consent.</text>
+</svg>

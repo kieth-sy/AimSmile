@@ -1,0 +1,198 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1800" viewBox="0 0 1800 1800" role="img" aria-labelledby="title desc">
+  <title id="title">Dental Clinic Management System full entity relationship diagram</title>
+  <desc id="desc">The current application data model grouped into accounts, identity, clinical care, billing, resources, and activity auditing, with foreign-key relationships shown locally within each domain.</desc>
+  <defs>
+    <marker id="rel-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#64748b"/></marker>
+    <style>
+      text{font-family:Inter,"Segoe UI",Arial,sans-serif;fill:#17243b}
+      .title{font-size:34px;font-weight:800;letter-spacing:-.7px}
+      .subtitle{font-size:15px;fill:#64748b}
+      .panel{fill:#fff;stroke:#dbe4f0;stroke-width:1.6}
+      .panelhead{font-size:17px;font-weight:800;letter-spacing:.3px}
+      .panelnote{font-size:11px;fill:#64748b}
+      .entity{fill:#fff;stroke:#94a3b8;stroke-width:1.5}
+      .user{fill:#eff6ff;stroke:#3b82f6;stroke-width:2}
+      .care{fill:#ecfdf5;stroke:#10b981;stroke-width:1.7}
+      .billing{fill:#fff7ed;stroke:#f59e0b;stroke-width:1.7}
+      .other{fill:#f5f3ff;stroke:#8b5cf6;stroke-width:1.7}
+      .head-blue{fill:#dbeafe}
+      .head-care{fill:#d1fae5}
+      .head-bill{fill:#ffedd5}
+      .head-other{fill:#ede9fe}
+      .entityname{font-size:13px;font-weight:800}
+      .field{font-size:11px;fill:#475569}
+      .rel{fill:none;stroke:#64748b;stroke-width:1.6}
+      .reltext{font-size:10px;font-weight:700;fill:#475569;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+      .legend{font-size:12px;fill:#475569}
+      .tag{font-size:10px;font-weight:800;fill:#2563eb}
+    </style>
+  </defs>
+  <rect width="1800" height="1800" fill="#f8fafc"/>
+  <text class="title" x="900" y="52" text-anchor="middle">Entity–Relationship Diagram</text>
+  <text class="subtitle" x="900" y="80" text-anchor="middle">Current application models grouped by domain · PK = primary key · FK = foreign key</text>
+
+  <!-- Accounts and identity -->
+  <rect class="panel" x="45" y="120" width="835" height="770" rx="22"/>
+  <text class="panelhead" x="75" y="160">A · ACCOUNTS &amp; IDENTITY</text>
+  <text class="panelnote" x="75" y="181">User is the shared account entity; role is an application-level field.</text>
+  <g>
+    <rect class="user" x="80" y="205" width="765" height="145" rx="14"/>
+    <path class="head-blue" d="M94 205 H831 Q845 205 845 219 V244 H80 V219 Q80 205 94 205Z"/>
+    <text class="entityname" x="100" y="231">USER · accounts.User</text>
+    <text class="field" x="100" y="270">id PK · username unique · password hash · role · name · email · phone</text>
+    <text class="field" x="100" y="293">gender · date_of_birth · address · avatar · bio · active / staff / superuser flags</text>
+    <text class="field" x="100" y="316">last_login · date_joined · signup_status · TOTP enabled · Rekognition face ID</text>
+  </g>
+  <g class="rel">
+    <path d="M155 350 V405" marker-end="url(#rel-arrow)"/><path d="M310 350 V405" marker-end="url(#rel-arrow)"/>
+    <path d="M465 350 V405" marker-end="url(#rel-arrow)"/><path d="M620 350 V405" marker-end="url(#rel-arrow)"/>
+    <path d="M775 350 V405" marker-end="url(#rel-arrow)"/>
+  </g>
+  <g class="reltext" text-anchor="middle">
+    <text x="155" y="388">1 : 0..1</text><text x="310" y="388">1 : 0..1</text>
+    <text x="465" y="388">1 : 0..1</text><text x="620" y="388">1 : 0..*</text>
+    <text x="775" y="388">1 : 0..*</text>
+  </g>
+  <g>
+    <rect class="entity" x="80" y="405" width="150" height="300" rx="10"/><path class="head-blue" d="M90 405 H220 Q230 405 230 415 V458 H80 V415 Q80 405 90 405Z"/>
+    <text class="entityname" x="92" y="432">PATIENT</text><text class="entityname" x="92" y="449">_PROFILE</text>
+    <text class="field" x="92" y="484">id PK</text><text class="field" x="92" y="506">user_id FK</text><text class="field" x="92" y="528">unique</text>
+    <text class="field" x="92" y="562">patient_code</text><text class="field" x="92" y="584">unique</text>
+    <text class="field" x="92" y="618">blood group</text><text class="field" x="92" y="640">allergies</text>
+    <text class="field" x="92" y="662">medical history</text><text class="field" x="92" y="684">emergency contact</text>
+
+    <rect class="entity" x="235" y="405" width="150" height="300" rx="10"/><path class="head-blue" d="M245 405 H375 Q385 405 385 415 V458 H235 V415 Q235 405 245 405Z"/>
+    <text class="entityname" x="247" y="432">DOCTOR</text><text class="entityname" x="247" y="449">_PROFILE</text>
+    <text class="field" x="247" y="484">id PK</text><text class="field" x="247" y="506">user_id FK</text><text class="field" x="247" y="528">unique</text>
+    <text class="field" x="247" y="562">specialization</text><text class="field" x="247" y="584">license_no</text>
+    <text class="field" x="247" y="618">experience</text><text class="field" x="247" y="640">consultation fee</text>
+    <text class="field" x="247" y="662">available days · rating</text><text class="field" x="247" y="684">availability · calendar creds</text>
+
+    <rect class="entity" x="390" y="405" width="150" height="300" rx="10"/><path class="head-blue" d="M400 405 H530 Q540 405 540 415 V458 H390 V415 Q390 405 400 405Z"/>
+    <text class="entityname" x="402" y="432">IDENTITY</text><text class="entityname" x="402" y="449">_VERIFICATION</text>
+    <text class="field" x="402" y="484">id PK</text><text class="field" x="402" y="506">user_id FK</text><text class="field" x="402" y="528">unique</text>
+    <text class="field" x="402" y="562">id_type</text><text class="field" x="402" y="584">id_number_digest</text>
+    <text class="field" x="402" y="618">face_template bytes</text>
+    <text class="field" x="402" y="640">consent / duplicate consent</text>
+    <text class="field" x="402" y="674">verified_at</text>
+
+    <rect class="entity" x="545" y="405" width="150" height="300" rx="10"/><path class="head-blue" d="M555 405 H685 Q695 405 695 415 V458 H545 V415 Q545 405 555 405Z"/>
+    <text class="entityname" x="557" y="432">SIGNUP</text><text class="entityname" x="557" y="449">_DUPLICATE_REPORT</text>
+    <text class="field" x="557" y="484">id PK</text><text class="field" x="557" y="506">candidate_user FK?</text>
+    <text class="field" x="557" y="528">matched_user FK?</text><text class="field" x="557" y="550">reviewed_by FK?</text>
+    <text class="field" x="557" y="584">name · email · phone</text><text class="field" x="557" y="618">similarity score</text>
+    <text class="field" x="557" y="652">reviewed_at</text><text class="field" x="557" y="684">all three user refs</text>
+
+    <rect class="entity" x="700" y="405" width="150" height="300" rx="10"/><path class="head-blue" d="M710 405 H840 Q850 405 850 415 V458 H700 V415 Q700 405 710 405Z"/>
+    <text class="entityname" x="712" y="432">CONTACT</text><text class="entityname" x="712" y="449">_MESSAGE</text>
+    <text class="field" x="712" y="484">id PK</text><text class="field" x="712" y="506">name · email</text>
+    <text class="field" x="712" y="528">subject · message</text><text class="field" x="712" y="562">status · reply</text>
+    <text class="field" x="712" y="596">replied_by FK?</text><text class="field" x="712" y="630">created_at</text>
+    <text class="field" x="712" y="662">replied_at</text>
+  </g>
+  <path class="rel" d="M845 350 H860 V795 H650" marker-end="url(#rel-arrow)"/>
+  <text class="reltext" x="755" y="786" text-anchor="middle">1 : 0..1</text>
+  <rect class="entity" x="320" y="735" width="330" height="120" rx="12"/><path class="head-blue" d="M332 735 H638 Q650 735 650 747 V770 H320 V747 Q320 735 332 735Z"/>
+  <text class="entityname" x="340" y="759">PHONE_VERIFICATION</text>
+  <text class="field" x="340" y="799">user_id FK unique · code_hash</text><text class="field" x="340" y="822">expires_at · last_sent_at · attempts</text>
+  <text class="panelnote" x="80" y="872">? = nullable user reference. Duplicate reports have candidate, matched and reviewer user references; contact sender is not a User FK.</text>
+
+  <!-- Appointments and care -->
+  <rect class="panel" x="920" y="120" width="835" height="770" rx="22"/>
+  <text class="panelhead" x="950" y="160">B · APPOINTMENTS &amp; CLINICAL CARE</text>
+  <text class="panelnote" x="950" y="181">Repeated USER / SERVICE cards are references to shared entities.</text>
+  <g>
+    <rect class="user" x="955" y="215" width="240" height="125" rx="12"/><path class="head-blue" d="M967 215 H1183 Q1195 215 1195 227 V250 H955 V227 Q955 215 967 215Z"/>
+    <text class="entityname" x="975" y="239">USER · shared reference</text><text class="field" x="975" y="278">patient_id / dentist_id</text><text class="field" x="975" y="301">patient required; dentist optional</text>
+    <rect class="billing" x="1500" y="215" width="230" height="125" rx="12"/><path class="head-bill" d="M1512 215 H1718 Q1730 215 1730 227 V250 H1500 V227 Q1500 215 1512 215Z"/>
+    <text class="entityname" x="1520" y="239">SERVICE</text><text class="field" x="1520" y="278">id PK · name · price</text><text class="field" x="1520" y="301">duration · is_active</text>
+
+    <rect class="care" x="1220" y="410" width="270" height="150" rx="12"/><path class="head-care" d="M1232 410 H1478 Q1490 410 1490 422 V445 H1220 V422 Q1220 410 1232 410Z"/>
+    <text class="entityname" x="1240" y="434">APPOINTMENT</text>
+    <text class="field" x="1240" y="474">id PK · patient_id FK</text><text class="field" x="1240" y="497">dentist_id FK? · service_id FK?</text>
+    <text class="field" x="1240" y="520">date · time · status · reason</text><text class="field" x="1240" y="543">no_show_risk · calendar event IDs</text>
+
+    <path class="rel" d="M1195 276 H1220" marker-end="url(#rel-arrow)"/><text class="reltext" x="1207" y="267" text-anchor="middle">1 : many</text>
+    <path class="rel" d="M1615 340 V375 H1490 V410" marker-end="url(#rel-arrow)"/><text class="reltext" x="1550" y="370" text-anchor="middle">0..1 service</text>
+
+    <rect class="care" x="955" y="650" width="220" height="180" rx="12"/><path class="head-care" d="M967 650 H1163 Q1175 650 1175 662 V685 H955 V662 Q955 650 967 650Z"/>
+    <text class="entityname" x="975" y="674">TOOTH_RECORD</text><text class="field" x="975" y="714">id PK · patient_id FK</text>
+    <text class="field" x="975" y="737">tooth_number · condition</text><text class="field" x="975" y="760">note · updated_at</text><text class="field" x="975" y="795">unique patient + tooth</text>
+    <path class="rel" d="M1075 340 V650" marker-end="url(#rel-arrow)"/><text class="reltext" x="1092" y="506">1 : many</text>
+
+    <rect class="care" x="1210" y="650" width="250" height="180" rx="12"/><path class="head-care" d="M1222 650 H1448 Q1460 650 1460 662 V685 H1210 V662 Q1210 650 1222 650Z"/>
+    <text class="entityname" x="1230" y="674">TREATMENT_RECORD</text><text class="field" x="1230" y="714">patient_id FK · dentist_id FK?</text>
+    <text class="field" x="1230" y="737">appointment_id FK? · service_id FK?</text><text class="field" x="1230" y="760">tooth · description · cost</text>
+    <text class="field" x="1230" y="795">date · is_completed</text>
+    <path class="rel" d="M1355 560 V650" marker-end="url(#rel-arrow)"/><text class="reltext" x="1370" y="610">0..1 : many</text>
+
+    <rect class="care" x="1490" y="650" width="240" height="115" rx="12"/><path class="head-care" d="M1502 650 H1718 Q1730 650 1730 662 V685 H1490 V662 Q1490 650 1502 650Z"/>
+    <text class="entityname" x="1510" y="674">PRESCRIPTION</text><text class="field" x="1510" y="714">patient_id FK · dentist_id FK?</text><text class="field" x="1510" y="737">appointment_id FK? · diagnosis</text>
+    <path class="rel" d="M1475 560 V605 H1610 V650" marker-end="url(#rel-arrow)"/><text class="reltext" x="1545" y="600">0..1 : many</text>
+    <rect class="care" x="1490" y="780" width="240" height="75" rx="12"/><path class="head-care" d="M1502 780 H1718 Q1730 780 1730 792 V815 H1490 V792 Q1490 780 1502 780Z"/>
+    <text class="entityname" x="1510" y="804">PRESCRIPTION_ITEM</text><text class="field" x="1510" y="839">prescription_id FK · medicine / dosage / frequency</text>
+    <path class="rel" d="M1610 765 V780" marker-end="url(#rel-arrow)"/>
+  </g>
+
+  <!-- Billing -->
+  <rect class="panel" x="45" y="930" width="835" height="760" rx="22"/>
+  <text class="panelhead" x="75" y="970">C · BILLING &amp; PAYMENTS</text>
+  <text class="panelnote" x="75" y="991">Invoice totals and balances are calculated from line items and confirmed payments.</text>
+  <g>
+    <rect class="user" x="80" y="1030" width="235" height="130" rx="12"/><path class="head-blue" d="M92 1030 H303 Q315 1030 315 1042 V1065 H80 V1042 Q80 1030 92 1030Z"/>
+    <text class="entityname" x="100" y="1054">USER · shared reference</text><text class="field" x="100" y="1093">patient_id FK</text><text class="field" x="100" y="1116">required patient account</text>
+    <rect class="entity" x="610" y="1030" width="235" height="130" rx="12"/><path class="head-blue" d="M622 1030 H833 Q845 1030 845 1042 V1065 H610 V1042 Q610 1030 622 1030Z"/>
+    <text class="entityname" x="630" y="1054">APPOINTMENT · shared ref</text><text class="field" x="630" y="1093">appointment_id FK?</text><text class="field" x="630" y="1116">optional invoice context</text>
+
+    <rect class="billing" x="330" y="1285" width="280" height="175" rx="12"/><path class="head-bill" d="M342 1285 H598 Q610 1285 610 1297 V1320 H330 V1297 Q330 1285 342 1285Z"/>
+    <text class="entityname" x="350" y="1309">INVOICE</text><text class="field" x="350" y="1349">id PK · number unique</text><text class="field" x="350" y="1372">patient_id FK · appointment_id FK?</text>
+    <text class="field" x="350" y="1395">issued / due date · tax · discount</text><text class="field" x="350" y="1418">status · notes · computed balance</text>
+    <path class="rel" d="M197 1160 V1215 H420 V1285" marker-end="url(#rel-arrow)"/>
+    <path class="rel" d="M727 1160 V1240 H550 V1285" marker-end="url(#rel-arrow)"/>
+    <text class="reltext" x="290" y="1208" text-anchor="middle">1 : many invoices</text><text class="reltext" x="645" y="1234" text-anchor="middle">0..1 appointment</text>
+
+    <rect class="billing" x="100" y="1530" width="310" height="125" rx="12"/><path class="head-bill" d="M112 1530 H398 Q410 1530 410 1542 V1565 H100 V1542 Q100 1530 112 1530Z"/>
+    <text class="entityname" x="120" y="1554">INVOICE_ITEM</text><text class="field" x="120" y="1594">invoice_id FK · description</text><text class="field" x="120" y="1617">quantity · unit_price</text>
+    <rect class="billing" x="515" y="1530" width="310" height="125" rx="12"/><path class="head-bill" d="M527 1530 H813 Q825 1530 825 1542 V1565 H515 V1542 Q515 1530 527 1530Z"/>
+    <text class="entityname" x="535" y="1554">PAYMENT</text><text class="field" x="535" y="1594">invoice_id FK · amount · method</text><text class="field" x="535" y="1617">paid_on · reference · status</text>
+    <path class="rel" d="M420 1460 V1495 H255 V1530" marker-end="url(#rel-arrow)"/><path class="rel" d="M550 1460 V1495 H670 V1530" marker-end="url(#rel-arrow)"/>
+    <text class="reltext" x="330" y="1490" text-anchor="middle">1 : many items</text><text class="reltext" x="640" y="1490" text-anchor="middle">1 : many payments</text>
+  </g>
+
+  <!-- Resources, reviews and calendar -->
+  <rect class="panel" x="920" y="930" width="835" height="760" rx="22"/>
+  <text class="panelhead" x="950" y="970">D · RESOURCES, FEEDBACK, CALENDAR &amp; AUDIT</text>
+  <text class="panelnote" x="950" y="991">Inventory is standalone; the calendar connection is optional and clinic-scoped.</text>
+  <g>
+    <rect class="other" x="955" y="1050" width="250" height="185" rx="12"/><path class="head-other" d="M967 1050 H1193 Q1205 1050 1205 1062 V1085 H955 V1062 Q955 1050 967 1050Z"/>
+    <text class="entityname" x="975" y="1074">INVENTORY_ITEM</text><text class="field" x="975" y="1114">id PK · name · category</text>
+    <text class="field" x="975" y="1137">quantity · unit · reorder_level</text><text class="field" x="975" y="1160">unit_price · supplier · icon</text>
+    <text class="field" x="975" y="1202">No foreign keys</text>
+
+    <rect class="user" x="1230" y="1050" width="240" height="145" rx="12"/><path class="head-blue" d="M1242 1050 H1458 Q1470 1050 1470 1062 V1085 H1230 V1062 Q1230 1050 1242 1050Z"/>
+    <text class="entityname" x="1250" y="1074">USER · shared reference</text><text class="field" x="1250" y="1114">patient / dentist / connector</text><text class="field" x="1250" y="1137">role-specific user references</text>
+
+    <rect class="other" x="1500" y="1050" width="230" height="185" rx="12"/><path class="head-other" d="M1512 1050 H1718 Q1730 1050 1730 1062 V1085 H1500 V1062 Q1500 1050 1512 1050Z"/>
+    <text class="entityname" x="1520" y="1074">REVIEW</text><text class="field" x="1520" y="1114">id PK · patient_id FK</text><text class="field" x="1520" y="1137">dentist_id FK? · rating</text>
+    <text class="field" x="1520" y="1160">comment · created_at</text><text class="field" x="1520" y="1202">is_public</text>
+    <path class="rel" d="M1470 1120 H1500" marker-end="url(#rel-arrow)"/><text class="reltext" x="1485" y="1110" text-anchor="middle">1 : many</text>
+
+    <rect class="other" x="1230" y="1450" width="300" height="170" rx="12"/><path class="head-other" d="M1242 1450 H1518 Q1530 1450 1530 1462 V1485 H1230 V1462 Q1230 1450 1242 1450Z"/>
+    <text class="entityname" x="1250" y="1474">CLINIC_GOOGLE_CALENDAR_CONNECTION</text>
+    <text class="field" x="1250" y="1514">id PK (single clinic connection)</text><text class="field" x="1250" y="1537">credentials · connected_by FK?</text>
+    <text class="field" x="1250" y="1560">updated_at</text>
+    <path class="rel" d="M1350 1195 V1450" marker-end="url(#rel-arrow)"/><text class="reltext" x="1370" y="1325">0..1 : connection</text>
+
+    <rect class="other" x="955" y="1450" width="250" height="170" rx="12"/><path class="head-other" d="M967 1450 H1193 Q1205 1450 1205 1462 V1485 H955 V1462 Q955 1450 967 1450Z"/>
+    <text class="entityname" x="975" y="1474">ACTIVITY_LOG</text>
+    <text class="field" x="975" y="1514">id PK · actor_id FK nullable</text>
+    <text class="field" x="975" y="1537">actor_username · action · summary</text>
+    <text class="field" x="975" y="1560">target reference · IP · created_at</text>
+    <path class="rel" d="M1300 1195 V1365 H1080 V1450" marker-end="url(#rel-arrow)"/>
+    <text class="reltext" x="1155" y="1358" text-anchor="middle">0..1 actor : 0..* events</text>
+  </g>
+
+  <rect x="45" y="1720" width="1710" height="54" rx="14" fill="#fff" stroke="#dbe4f0"/>
+  <text class="legend" x="70" y="1743">Relationship labels show approximate cardinality; nullable foreign keys are marked with ?.</text>
+  <text class="legend" x="70" y="1762">USER reference cards repeat the same accounts.User entity. ActivityLog.actor is nullable for anonymous failures; auth/session tables are omitted.</text>
+</svg>

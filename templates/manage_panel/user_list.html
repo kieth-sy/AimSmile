@@ -1,0 +1,102 @@
+{% extends 'app_base.html' %}
+{% block page_title %}Users & Roles{% endblock %}
+{% block page_subtitle %}Full control over accounts{% endblock %}
+
+{% block app_content %}
+{% if pending_users %}
+<div class="card-app mb-4">
+  <h5 class="fw-bold mb-3"><i class="bi bi-shield-check text-gradient"></i> Pending account verification</h5>
+  <div class="table-responsive">
+    <table class="table-app">
+      <thead><tr><th>User</th><th>Phone</th><th>Email</th><th>Verification</th><th>ID and face check</th><th class="text-end">Action</th></tr></thead>
+      <tbody>
+      {% for u in pending_users %}
+        <tr>
+          <td>{{ u.display_name }}</td><td>{{ u.phone }}</td><td>{{ u.email }}</td>
+          <td>{% if u.phone_verified_at %}<span class="badge-app badge-success">Phone verified</span>{% else %}<span class="badge-app badge-warning">Phone pending</span>{% endif %}</td>
+          <td>
+            {% if u.identity_verification.duplicate_check_consented_at and u.identity_verification.id_number_digest and u.identity_verification.face_template %}
+              <span class="badge-app badge-success">ID and face check complete</span>
+            {% else %}
+              <span class="badge-app badge-warning">Identity check missing</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <form method="post" action="{% url 'manage_panel:pending_user_review' u.pk %}" class="d-inline">
+              {% csrf_token %}
+              <button class="btn-soft" name="action" value="approve" type="submit"><i class="bi bi-check2"></i> Approve</button>
+              <button class="btn-soft" name="action" value="reject" type="submit"><i class="bi bi-x"></i> Reject</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% if duplicate_reports %}
+<div class="card-app mb-4">
+  <h5 class="fw-bold mb-3"><i class="bi bi-person-badge text-gradient"></i> Possible duplicate patients</h5>
+  <div class="table-responsive">
+    <table class="table-app">
+      <thead><tr><th>New or enrolling patient</th><th>Email</th><th>Phone</th><th>Possible match</th><th>Similarity</th><th class="text-end">Action</th></tr></thead>
+      <tbody>
+      {% for report in duplicate_reports %}
+        <tr>
+          <td>{{ report.first_name }} {{ report.last_name }}</td><td>{{ report.email }}</td><td>{{ report.phone }}</td>
+          <td>{% if report.matched_user %}{{ report.matched_user.display_name }} ({{ report.matched_user.email }}){% else %}Account unavailable{% endif %}</td>
+          <td>{{ report.match_similarity|floatformat:1 }}%</td>
+          <td class="text-end">
+            <form method="post" action="{% url 'manage_panel:duplicate_signup_review' report.pk %}">
+              {% csrf_token %}
+              <button class="btn-soft" type="submit"><i class="bi bi-check2"></i> Mark reviewed</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+<div class="card-app">
+  <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+    <form method="get" class="d-flex gap-2 flex-wrap">
+      <input class="form-control-app" name="q" value="{{ search }}" placeholder="Search users..." style="max-width:240px;">
+      <select name="role" class="form-control-app select-app" style="max-width:180px;" onchange="this.form.submit()">
+        <option value="">All roles</option>
+        <option value="admin" {% if current_role == 'admin' %}selected{% endif %}>Administrator</option>
+        <option value="dentist" {% if current_role == 'dentist' %}selected{% endif %}>Dentist</option>
+        <option value="receptionist" {% if current_role == 'receptionist' %}selected{% endif %}>Receptionist</option>
+        <option value="patient" {% if current_role == 'patient' %}selected{% endif %}>Patient</option>
+      </select>
+      <button class="btn-ghost" type="submit"><i class="bi bi-search"></i></button>
+    </form>
+    <a href="{% url 'manage_panel:user_create' %}" class="btn-app"><i class="bi bi-person-plus"></i> Add User</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table-app">
+      <thead><tr><th>User</th><th>Username</th><th>Role</th><th>Email</th><th>Phone</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td><div class="d-flex align-items-center gap-2"><div class="avatar" style="width:34px;height:34px;font-size:.72rem;">{% if u.avatar %}<img src="{{ u.avatar.url }}">{% else %}{{ u.initials }}{% endif %}</div>{{ u.display_name }}</div></td>
+          <td>{{ u.username }}</td>
+          <td><span class="badge-app badge-info">{{ u.get_role_display }}</span></td>
+          <td>{{ u.email|default:"—" }}</td>
+          <td>{{ u.phone }}</td>
+          <td>{% if u.is_active %}<span class="badge-app badge-success">Active</span>{% else %}<span class="badge-app badge-secondary">Inactive</span>{% endif %}</td>
+          <td class="text-end">
+            <a href="{% url 'manage_panel:user_update' u.pk %}" class="btn-soft"><i class="bi bi-pencil"></i></a>
+            <a href="{% url 'manage_panel:user_delete' u.pk %}" class="btn-soft btn-delete-action" aria-label="Delete {{ u.display_name }}"><i class="bi bi-trash3"></i></a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center py-5 muted">No users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

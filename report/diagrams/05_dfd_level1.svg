@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1660" viewBox="0 0 1920 1660" role="img" aria-labelledby="title description">
+  <title id="title">Dental Clinic Management System Data Flow Diagram Level 1</title>
+  <desc id="description">A role-based Level 1 data flow diagram with seven processes, six data stores, and reporting reads.</desc>
+  <defs>
+    <marker id="arrow-blue" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#3267d5"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#138a81"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#d87916"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#8252c7"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#d94762"/>
+    </marker>
+    <marker id="arrow-gray" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#66758c"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #17243b; }
+      .title { font-size: 34px; font-weight: 700; }
+      .subtitle { font-size: 17px; fill: #53647b; }
+      .section { font-size: 14px; font-weight: 700; letter-spacing: 1.4px; fill: #718198; }
+      .entity { stroke-width: 2.5; rx: 4; }
+      .entity-label { font-size: 17px; font-weight: 700; text-anchor: middle; }
+      .process { stroke-width: 3; }
+      .process-no { font-size: 16px; font-weight: 700; text-anchor: middle; }
+      .process-label { font-size: 18px; font-weight: 700; text-anchor: middle; }
+      .store { fill: #fff8e9; stroke: #d78a1c; stroke-width: 2.2; }
+      .store-id { font-size: 17px; font-weight: 700; }
+      .store-label { font-size: 15px; }
+      .flow { fill: none; stroke-width: 2.4; }
+      .flow-label { font-size: 13px; font-weight: 600; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; }
+      .legend { font-size: 14px; fill: #53647b; }
+    </style>
+  </defs>
+
+  <rect width="1920" height="1660" fill="#ffffff"/>
+  <text class="title" x="960" y="58" text-anchor="middle">Data Flow Diagram — Level 1</text>
+  <text class="subtitle" x="960" y="88" text-anchor="middle">Dental Clinic Management System | Role-based processes and persistent records</text>
+  <text class="section" x="60" y="128">EXTERNAL ENTITIES</text>
+  <text class="section" x="600" y="128">SYSTEM PROCESSES</text>
+  <text class="section" x="1100" y="128">DATA STORES</text>
+
+  <!-- 1.0 Accounts and profiles -->
+  <rect class="entity" x="60" y="160" width="210" height="48" fill="#edf3ff" stroke="#3267d5"/>
+  <text class="entity-label" x="165" y="190">Patient</text>
+  <ellipse class="process" cx="750" cy="184" rx="150" ry="55" fill="#eaf7f4" stroke="#138a81"/>
+  <text class="process-no" x="750" y="172">1.0</text>
+  <text class="process-label" x="750" y="198">Accounts &amp; Profiles</text>
+  <rect class="store" x="1100" y="138" width="300" height="92" rx="4"/>
+  <line x1="1100" y1="170" x2="1400" y2="170" stroke="#d78a1c" stroke-width="2"/>
+  <text class="store-id" x="1118" y="162">D1</text><text class="store-label" x="1118" y="202">Users &amp; profiles</text>
+  <path class="flow" stroke="#3267d5" marker-end="url(#arrow-blue)" d="M270 176 H600"/>
+  <text class="flow-label" x="348" y="169">credentials / registration</text>
+  <path class="flow" stroke="#3267d5" marker-end="url(#arrow-blue)" d="M600 194 H270"/>
+  <text class="flow-label" x="360" y="211">authentication / profile status</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M900 174 H1100"/>
+  <text class="flow-label" x="936" y="164">account updates</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M1100 194 H900"/>
+  <text class="flow-label" x="935" y="215">profile / role data</text>
+
+  <!-- 2.0 Appointment management -->
+  <rect class="entity" x="60" y="300" width="210" height="44" fill="#edf3ff" stroke="#3267d5"/>
+  <text class="entity-label" x="165" y="328">Patient</text>
+  <rect class="entity" x="60" y="353" width="210" height="44" fill="#e8f7f3" stroke="#138a81"/>
+  <text class="entity-label" x="165" y="381">Dentist</text>
+  <rect class="entity" x="60" y="406" width="210" height="44" fill="#fff5e8" stroke="#d87916"/>
+  <text class="entity-label" x="165" y="434">Receptionist</text>
+  <ellipse class="process" cx="750" cy="375" rx="150" ry="68" fill="#edf3ff" stroke="#3267d5"/>
+  <text class="process-no" x="750" y="355">2.0</text>
+  <text class="process-label" x="750" y="382"><tspan x="750">Appointment</tspan><tspan x="750" dy="22">Management</tspan></text>
+  <rect class="store" x="1100" y="329" width="300" height="92" rx="4"/>
+  <line x1="1100" y1="361" x2="1400" y2="361" stroke="#d78a1c" stroke-width="2"/>
+  <text class="store-id" x="1118" y="353">D3</text><text class="store-label" x="1118" y="393">Appointments</text>
+  <path class="flow" stroke="#3267d5" marker-end="url(#arrow-blue)" d="M270 310 C390 310 475 345 600 355"/>
+  <text class="flow-label" x="325" y="300">booking / cancellation</text>
+  <path class="flow" stroke="#3267d5" marker-end="url(#arrow-blue)" d="M600 370 C475 360 390 330 270 330"/>
+  <text class="flow-label" x="342" y="346">confirmation / schedule</text>
+  <path class="flow" stroke="#138a81" marker-end="url(#arrow-teal)" d="M270 375 H600"/>
+  <text class="flow-label" x="350" y="393">availability</text>
+  <path class="flow" stroke="#d87916" marker-end="url(#arrow-orange)" d="M270 426 C395 426 490 405 600 395"/>
+  <text class="flow-label" x="337" y="444">schedule / status updates</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M900 365 H1100"/>
+  <text class="flow-label" x="943" y="355">appointment changes</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M1100 385 H900"/>
+  <text class="flow-label" x="936" y="406">schedule / appointment data</text>
+
+  <!-- 3.0 Clinical care records -->
+  <rect class="entity" x="60" y="548" width="210" height="48" fill="#e8f7f3" stroke="#138a81"/>
+  <text class="entity-label" x="165" y="578">Dentist</text>
+  <ellipse class="process" cx="750" cy="572" rx="150" ry="55" fill="#eaf7f4" stroke="#138a81"/>
+  <text class="process-no" x="750" y="560">3.0</text>
+  <text class="process-label" x="750" y="586">Clinical Care Records</text>
+  <rect class="store" x="1100" y="526" width="300" height="92" rx="4"/>
+  <line x1="1100" y1="558" x2="1400" y2="558" stroke="#d78a1c" stroke-width="2"/>
+  <text class="store-id" x="1118" y="550">D4</text><text class="store-label" x="1118" y="590">Tooth / treatment / Rx records</text>
+  <path class="flow" stroke="#138a81" marker-end="url(#arrow-teal)" d="M270 558 H600"/>
+  <text class="flow-label" x="348" y="550">diagnosis / treatment / prescription</text>
+  <path class="flow" stroke="#138a81" marker-end="url(#arrow-teal)" d="M600 582 H270"/>
+  <text class="flow-label" x="363" y="600">patient history / clinical plan</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M900 562 H1100"/>
+  <text class="flow-label" x="942" y="552">clinical updates</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M1100 582 H900"/>
+  <text class="flow-label" x="945" y="603">patient care history</text>
+  <path class="flow" stroke="#138a81" marker-end="url(#arrow-teal)" d="M750 443 V517"/>
+  <text class="flow-label" x="765" y="490">appointment context</text>
+
+  <!-- 4.0 Billing and payments -->
+  <rect class="entity" x="60" y="720" width="210" height="44" fill="#edf3ff" stroke="#3267d5"/>
+  <text class="entity-label" x="165" y="748">Patient</text>
+  <rect class="entity" x="60" y="773" width="210" height="44" fill="#fff5e8" stroke="#d87916"/>
+  <text class="entity-label" x="165" y="801">Receptionist</text>
+  <ellipse class="process" cx="750" cy="768" rx="150" ry="61" fill="#fff0f2" stroke="#d94762"/>
+  <text class="process-no" x="750" y="751">4.0</text>
+  <text class="process-label" x="750" y="778"><tspan x="750">Billing &amp;</tspan><tspan x="750" dy="21">Payments</tspan></text>
+  <rect class="store" x="1100" y="722" width="300" height="92" rx="4"/>
+  <line x1="1100" y1="754" x2="1400" y2="754" stroke="#d78a1c" stroke-width="2"/>
+  <text class="store-id" x="1118" y="746">D5</text><text class="store-label" x="1118" y="786">Invoices &amp; payments</text>
+  <path class="flow" stroke="#3267d5" marker-end="url(#arrow-blue)" d="M270 730 C390 730 490 750 600 755"/>
+  <text class="flow-label" x="336" y="720">payment / downpayment</text>
+  <path class="flow" stroke="#3267d5" marker-end="url(#arrow-blue)" d="M600 777 C490 770 390 750 270 750"/>
+  <text class="flow-label" x="350" y="780">invoice / balance / receipt</text>
+  <path class="flow" stroke="#d87916" marker-end="url(#arrow-orange)" d="M270 795 H600"/>
+  <text class="flow-label" x="341" y="812">invoice / payment verification</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M900 758 H1100"/>
+  <text class="flow-label" x="946" y="748">invoice / payment record</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M1100 778 H900"/>
+  <text class="flow-label" x="950" y="800">balance / payment status</text>
+  <path class="flow" stroke="#d94762" marker-end="url(#arrow-red)" d="M750 627 V707"/>
+  <text class="flow-label" x="765" y="674">billable treatment items</text>
+  <path class="flow" stroke="#d87916" marker-end="url(#arrow-orange)" d="M750 916 V829"/>
+  <text class="flow-label" x="765" y="878">service pricing</text>
+
+  <!-- 5.0 Clinic resources and reviews -->
+  <rect class="entity" x="60" y="908" width="210" height="44" fill="#edf3ff" stroke="#3267d5"/>
+  <text class="entity-label" x="165" y="936">Patient</text>
+  <rect class="entity" x="60" y="961" width="210" height="44" fill="#fff5e8" stroke="#d87916"/>
+  <text class="entity-label" x="165" y="989">Receptionist</text>
+  <rect class="entity" x="60" y="1014" width="210" height="44" fill="#f3edff" stroke="#8252c7"/>
+  <text class="entity-label" x="165" y="1042">Administrator</text>
+  <ellipse class="process" cx="750" cy="983" rx="150" ry="67" fill="#fff5e8" stroke="#d87916"/>
+  <text class="process-no" x="750" y="963">5.0</text>
+  <text class="process-label" x="750" y="990"><tspan x="750">Services, Inventory</tspan><tspan x="750" dy="21">&amp; Reviews</tspan></text>
+  <rect class="store" x="1100" y="916" width="300" height="75" rx="4"/>
+  <line x1="1100" y1="944" x2="1400" y2="944" stroke="#d78a1c" stroke-width="2"/>
+  <text class="store-id" x="1118" y="937">D2</text><text class="store-label" x="1118" y="972">Services</text>
+  <rect class="store" x="1100" y="1005" width="300" height="75" rx="4"/>
+  <line x1="1100" y1="1033" x2="1400" y2="1033" stroke="#d78a1c" stroke-width="2"/>
+  <text class="store-id" x="1118" y="1026">D6</text><text class="store-label" x="1118" y="1061">Inventory &amp; reviews</text>
+  <path class="flow" stroke="#3267d5" marker-end="url(#arrow-blue)" d="M270 918 C385 918 490 952 600 965"/>
+  <text class="flow-label" x="346" y="908">review / feedback</text>
+  <path class="flow" stroke="#d87916" marker-end="url(#arrow-orange)" d="M270 983 H600"/>
+  <text class="flow-label" x="350" y="975">inventory updates</text>
+  <path class="flow" stroke="#8252c7" marker-end="url(#arrow-purple)" d="M270 1036 C390 1036 495 1007 600 997"/>
+  <text class="flow-label" x="346" y="1054">service / resource changes</text>
+  <path class="flow" stroke="#8252c7" marker-end="url(#arrow-purple)" d="M600 1014 C495 1053 390 1063 270 1050"/>
+  <text class="flow-label" x="352" y="1075">stock / review status</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M895 948 H1100"/>
+  <text class="flow-label" x="925" y="938">service changes</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M1100 976 C1035 976 960 990 895 1000"/>
+  <text class="flow-label" x="920" y="991">service catalog</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M895 1018 C975 1018 1030 1030 1100 1040"/>
+  <text class="flow-label" x="1090" y="1098">inventory / review updates</text>
+  <path class="flow" stroke="#66758c" marker-end="url(#arrow-gray)" d="M1100 1056 C1030 1056 960 1038 895 1028"/>
+  <text class="flow-label" x="930" y="1073">stock / review records</text>
+  <path class="flow" stroke="#d87916" marker-end="url(#arrow-orange)" d="M750 1050 V1122"/>
+  <text class="flow-label" x="765" y="1093">service pricing</text>
+
+  <!-- 6.0 Informational assistant -->
+  <rect class="entity" x="60" y="1155" width="210" height="48" fill="#edf3ff" stroke="#3267d5"/>
+  <text class="entity-label" x="165" y="1185">Patient</text>
+  <ellipse class="process" cx="750" cy="1179" rx="150" ry="55" fill="#f3edff" stroke="#8252c7"/>
+  <text class="process-no" x="750" y="1167">6.0</text>
+  <text class="process-label" x="750" y="1193">Informational Assistant</text>
+  <path class="flow" stroke="#3267d5" marker-end="url(#arrow-blue)" d="M270 1171 H600"/>
+  <text class="flow-label" x="365" y="1163">symptoms / question</text>
+  <path class="flow" stroke="#3267d5" marker-end="url(#arrow-blue)" d="M600 1191 H270"/>
+  <text class="flow-label" x="350" y="1210">general guidance / estimate</text>
+
+  <!-- 7.0 Reports and analytics -->
+  <rect class="entity" x="60" y="1352" width="210" height="48" fill="#f3edff" stroke="#8252c7"/>
+  <text class="entity-label" x="165" y="1382">Administrator</text>
+  <ellipse class="process" cx="750" cy="1376" rx="150" ry="60" fill="#fff8e9" stroke="#d78a1c"/>
+  <text class="process-no" x="750" y="1359">7.0</text>
+  <text class="process-label" x="750" y="1386"><tspan x="750">Reports &amp;</tspan><tspan x="750" dy="21">Analytics</tspan></text>
+  <path class="flow" stroke="#8252c7" marker-end="url(#arrow-purple)" d="M270 1368 H600"/>
+  <text class="flow-label" x="380" y="1360">report request</text>
+  <path class="flow" stroke="#8252c7" marker-end="url(#arrow-purple)" d="M600 1390 H270"/>
+  <text class="flow-label" x="374" y="1409">analytics / reports</text>
+
+  <!-- Reporting reads from the operational stores, routed outside the process lanes -->
+  <path class="flow" stroke="#d87916" stroke-dasharray="7 6" marker-end="url(#arrow-orange)" d="M1400 184 H1760 V1344 C1510 1344 1190 1350 900 1360"/>
+  <path class="flow" stroke="#d87916" stroke-dasharray="7 6" marker-end="url(#arrow-orange)" d="M1400 375 H1790 V1364 C1510 1364 1190 1368 900 1370"/>
+  <path class="flow" stroke="#d87916" stroke-dasharray="7 6" marker-end="url(#arrow-orange)" d="M1400 572 H1820 V1384 C1510 1384 1190 1385 900 1380"/>
+  <path class="flow" stroke="#d87916" stroke-dasharray="7 6" marker-end="url(#arrow-orange)" d="M1400 768 H1850 V1404 C1510 1404 1190 1402 900 1390"/>
+  <text class="flow-label" x="1445" y="1324">patient counts</text>
+  <text class="flow-label" x="1500" y="1346">appointment totals</text>
+  <text class="flow-label" x="1507" y="1418">treatment mix / revenue</text>
+
+  <!-- Legend and scope note -->
+  <line x1="65" y1="1510" x2="125" y2="1510" stroke="#3267d5" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <text class="legend" x="138" y="1515">External data flow</text>
+  <line x1="325" y1="1510" x2="385" y2="1510" stroke="#66758c" stroke-width="2.5" marker-end="url(#arrow-gray)"/>
+  <text class="legend" x="398" y="1515">Process / store flow</text>
+  <line x1="615" y1="1510" x2="675" y2="1510" stroke="#d87916" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow-orange)"/>
+  <text class="legend" x="688" y="1515">Reporting read</text>
+  <ellipse cx="875" cy="1510" rx="24" ry="12" fill="#eaf7f4" stroke="#138a81" stroke-width="2"/>
+  <text class="legend" x="912" y="1515">Process</text>
+  <rect x="1018" y="1498" width="55" height="24" rx="3" fill="#fff8e9" stroke="#d78a1c" stroke-width="2"/>
+  <text class="legend" x="1085" y="1515">Data store</text>
+  <text class="legend" x="960" y="1570" text-anchor="middle">Repeated external-entity boxes represent the same role. Assistant outputs are informational; no external AI or payment service is shown.</text>
+</svg>

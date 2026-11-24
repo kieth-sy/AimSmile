@@ -1,0 +1,46 @@
+{% extends 'app_base.html' %}
+{% load clinic_extras %}
+{% block page_title %}Invoices{% endblock %}
+
+{% block app_content %}
+<div class="card-app">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h6 class="fw-bold mb-0"><i class="bi bi-receipt text-gradient"></i> Invoices</h6>
+    {% if user.is_admin or user.is_receptionist %}<a href="{% url 'clinic:invoice_create' %}" class="btn-app"><i class="bi bi-plus-lg"></i> New Invoice</a>{% endif %}
+  </div>
+  <div class="table-responsive">
+    <table class="table-app">
+      <thead><tr><th>Invoice #</th><th>Patient</th><th>Issued</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+      <tbody>
+        {% for inv in invoices %}
+        <tr>
+          <td class="fw-bold">{{ inv.number }}</td>
+          <td>{{ inv.patient.display_name }}</td>
+          <td>{{ inv.issued_date|date:"d M Y" }}</td>
+          <td class="fw-bold">{{ inv.total|currency }}</td>
+          <td class="text-success">{{ inv.amount_paid|currency }}</td>
+          <td class="text-danger">{{ inv.balance|currency }}</td>
+          <td>
+            <span class="badge-app badge-{{ inv.status_color }}">{{ inv.get_status_display }}</span>
+            {% if user.is_admin or user.is_receptionist %}
+              {% for payment in inv.payments.all %}
+                {% if payment.status == 'pending' %}<span class="badge-app badge-warning">Payment to verify</span>{% endif %}
+              {% endfor %}
+            {% endif %}
+          </td>
+          <td class="text-end">
+            {% if user.is_patient and inv.balance > 0 %}
+            <a href="{% url 'clinic:invoice_detail' inv.pk %}" class="btn-app"><i class="bi bi-credit-card"></i> Pay</a>
+            {% endif %}
+            <a href="{% url 'clinic:invoice_detail' inv.pk %}" class="btn-soft"><i class="bi bi-eye"></i></a>
+            {% if user.is_admin or user.is_receptionist %}<a href="{% url 'clinic:invoice_delete' inv.pk %}" class="btn-soft btn-delete-action" aria-label="Delete invoice {{ inv.number }}"><i class="bi bi-trash3"></i></a>{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center py-5 muted"><i class="bi bi-receipt fs-1 d-block mb-2"></i>No invoices yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block head_extra %}
+<link href="{% static 'css/pages/manage_panel/dashboard.css' %}?v=4" rel="stylesheet">
+{% endblock %}
+
+{% block page_title %}Front Desk{% endblock %}
+{% block page_subtitle %}Reception overview{% endblock %}
+
+{% block app_content %}
+<div class="nm-header">
+  <div>
+    <h1 class="nm-title">Front Desk</h1>
+    <div class="nm-subtitle">Appointments, patients and billing at a glance.</div>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a href="{% url 'clinic:appointment_create' %}" class="btn-app"><i class="bi bi-calendar-plus me-1"></i>New Appointment</a>
+    <a href="{% url 'clinic:invoice_create' %}" class="btn-ghost"><i class="bi bi-receipt me-1"></i>Create Invoice</a>
+    <a href="{% url 'clinic:patient_list' %}" class="btn-ghost"><i class="bi bi-people me-1"></i>Patients</a>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="nm-card nm-kpi">
+      <div class="nm-kpi-header">
+        <div class="nm-kpi-icon icon-teal"><i class="bi bi-calendar2-week"></i></div>
+        <span class="nm-badge badge-blue">Today</span>
+      </div>
+      <div><div class="nm-kpi-label">Appointments</div><div class="nm-kpi-val">{{ total_today }}</div></div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="nm-card nm-kpi">
+      <div class="nm-kpi-header">
+        <div class="nm-kpi-icon icon-amber"><i class="bi bi-hourglass-split"></i></div>
+        <span class="nm-badge badge-neutral">Needs review</span>
+      </div>
+      <div><div class="nm-kpi-label">Pending Requests</div><div class="nm-kpi-val">{{ pending_count }}</div></div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="nm-card nm-kpi">
+      <div class="nm-kpi-header">
+        <div class="nm-kpi-icon icon-blue"><i class="bi bi-check2-circle"></i></div>
+        <span class="nm-badge badge-green">Scheduled</span>
+      </div>
+      <div><div class="nm-kpi-label">Confirmed</div><div class="nm-kpi-val">{{ confirmed_count }}</div></div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="nm-card nm-kpi">
+      <div class="nm-kpi-header">
+        <div class="nm-kpi-icon icon-purple"><i class="bi bi-cash-stack"></i></div>
+        <span class="nm-badge badge-red">Due</span>
+      </div>
+      <div><div class="nm-kpi-label">Unpaid Invoices</div><div class="nm-kpi-val">{{ unpaid_invoices }}</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-8">
+    <div class="nm-card h-100">
+      <div class="nm-widget-header">
+        <div>
+          <h6 class="nm-widget-title">Revenue Trend</h6>
+          <div class="nm-widget-subtitle">Collected payments · newest month first</div>
+        </div>
+        <a href="{% url 'clinic:invoice_list' %}" class="nm-widget-link">View invoices</a>
+      </div>
+      <div style="height:250px;"><canvas id="revChart"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="nm-card h-100">
+      <div class="nm-widget-header"><h6 class="nm-widget-title">Appointment Status</h6></div>
+      <div class="nm-donut-wrap">
+        <div class="nm-donut-box">
+          <canvas id="statusChart"></canvas>
+          <div class="nm-donut-center">
+            <div class="nm-donut-num">{{ total_appointments }}</div>
+            <div class="nm-donut-lbl">Appointments</div>
+          </div>
+        </div>
+        <div class="nm-donut-info">
+          <div class="nm-donut-info-lbl">Clinic schedule</div>
+          <span class="nm-badge badge-blue">{{ total_today }} today</span>
+        </div>
+      </div>
+      <div class="nm-status-legend" aria-label="Appointment status colors">
+        <span><i class="nm-status-swatch pending"></i>Pending</span>
+        <span><i class="nm-status-swatch confirmed"></i>Confirmed</span>
+        <span><i class="nm-status-swatch completed"></i>Completed</span>
+        <span><i class="nm-status-swatch cancelled"></i>Cancelled</span>
+        <span><i class="nm-status-swatch no-show"></i>No Show</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-4">
+    <div class="nm-card h-100">
+      <div class="nm-widget-header"><h6 class="nm-widget-title">Appointments / Month</h6></div>
+      <div class="nm-chart-well" style="height:190px;"><canvas id="apptsChart"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="nm-card h-100">
+      <div class="nm-widget-header">
+        <h6 class="nm-widget-title">Today's Appointments</h6>
+        <a href="{% url 'clinic:appointment_list' %}" class="nm-widget-link">View all</a>
+      </div>
+      {% if today_appointments %}
+      <div class="table-responsive">
+        <table class="table-app">
+          <thead><tr><th>Time</th><th>Patient</th><th>Dentist</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            {% for a in today_appointments %}
+            <tr>
+              <td class="fw-bold">{{ a.time|time:"g:i A" }}</td>
+              <td>{{ a.patient.display_name }}</td>
+              <td>{% if a.dentist %}Dr. {{ a.dentist.display_name }}{% else %}—{% endif %}</td>
+              <td><span class="nm-badge {% if a.status == 'confirmed' %}badge-blue{% elif a.status == 'completed' %}badge-green{% elif a.status == 'cancelled' or a.status == 'no_show' %}badge-red{% else %}badge-neutral{% endif %}">{{ a.get_status_display }}</span></td>
+              <td class="text-end text-nowrap">
+                {% if a.status == 'pending' %}
+                <form method="post" action="{% url 'clinic:appointment_set_status' a.pk 'confirmed' %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-soft" title="Confirm" aria-label="Confirm appointment for {{ a.patient.display_name }}"><i class="bi bi-check2"></i></button>
+                </form>
+                {% endif %}
+                <a href="{% url 'clinic:appointment_detail' a.pk %}" class="btn-soft" aria-label="View appointment for {{ a.patient.display_name }}"><i class="bi bi-eye"></i></a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="nm-empty-treatment">
+        <div class="nm-empty-icon"><i class="bi bi-calendar-x"></i></div>
+        <div class="nm-empty-title">No appointments today</div>
+        <div class="nm-empty-desc">New bookings will appear here.</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="nm-card">
+      <div class="nm-widget-header">
+        <h6 class="nm-widget-title">Pending Requests</h6>
+        <a href="{% url 'clinic:appointment_list' %}" class="nm-widget-link">View all appointments</a>
+      </div>
+      {% for a in pending %}
+      <div class="d-flex flex-wrap align-items-center gap-3 py-2 border-bottom">
+        <div class="nm-kpi-icon icon-amber"><i class="bi bi-person"></i></div>
+        <div class="flex-grow-1">
+          <div class="fw-bold small">{{ a.patient.display_name }}</div>
+          <div class="nm-widget-subtitle">{{ a.date|date:"d M Y" }} · {{ a.time|time:"g:i A" }} · {{ a.service.name|default:"General" }}</div>
+        </div>
+        <span class="nm-badge badge-neutral">Pending</span>
+        <form method="post" action="{% url 'clinic:appointment_set_status' a.pk 'confirmed' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-app"><i class="bi bi-check2 me-1"></i>Confirm</button>
+        </form>
+      </div>
+      {% empty %}
+      <div class="nm-empty-treatment">
+        <div class="nm-empty-icon"><i class="bi bi-check2-circle"></i></div>
+        <div class="nm-empty-title">All caught up</div>
+        <div class="nm-empty-desc">There are no pending appointment requests.</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script id="revData" type="application/json">{{ revenue_json|safe }}</script>
+<script id="statusData" type="application/json">{{ status_json|safe }}</script>
+<script id="apptsData" type="application/json">{{ appts_month_json|safe }}</script>
+{% endblock %}
+
+{% block app_scripts %}
+<script>
+  barChart('revChart', 'revData', 'Revenue', { currency: true, maxBarThickness: 36 });
+  appointmentStatusChart('statusChart', 'statusData', false);
+  barChart('apptsChart', 'apptsData', 'Appointments');
+</script>
+{% endblock %}

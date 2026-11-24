@@ -1,0 +1,166 @@
+{% extends 'public_base.html' %}
+{% load static %}
+{% block title %}AimSmile · Advanced Dental Clinic & Management{% endblock %}
+
+{% block head_extra %}
+{{ block.super }}
+<link href="{% static 'css/pages/home.css' %}?v=26" rel="stylesheet">
+{% endblock %}
+
+{% block public_content %}
+<section class="landing-hero" aria-labelledby="landing-title">
+  <div class="landing-hero-inner">
+    <div class="landing-copy">
+      <h1 id="landing-title">Healthy <span>Smile,</span><br><span>Brighter</span> Life.</h1>
+      <p>AimSmile Dental Clinic is committed to providing high-quality, gentle, and affordable dental care for the whole family.</p>
+      <div class="landing-actions">
+        {% if user.is_authenticated %}
+          <a href="{% url 'accounts:redirect_dashboard' %}" class="landing-button landing-button-primary">Book Appointment</a>
+        {% else %}
+          <a href="{% url 'accounts:signup' %}" class="landing-button landing-button-primary">Book Appointment</a>
+        {% endif %}
+        <a href="{% url 'pages:services' %}" class="landing-button landing-button-secondary">Our Services</a>
+      </div>
+    </div>
+    <div class="landing-art" aria-hidden="true">
+      <div class="landing-orbit">
+        <img src="{% static 'img/aimsmile_logo.png' %}" alt="">
+      </div>
+      <span class="landing-icon landing-icon-tooth">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7.4 3.2c-2.7 0-4.9 2.1-4.9 5.1 0 3.8 2.8 6.2 3.7 9.4.4 1.4 1.2 3.1 2.2 3.1 1.6 0 1.2-5.7 2.8-5.7s1.2 5.7 2.8 5.7c1 0 1.8-1.7 2.2-3.1.9-3.2 3.7-5.6 3.7-9.4 0-3-2.2-5.1-4.9-5.1-1.4 0-2.6.7-3.8.7s-2.4-.7-3.8-.7z"/>
+        </svg>
+      </span>
+      <span class="landing-icon landing-icon-chart"><i class="bi bi-graph-up-arrow"></i></span>
+      <span class="landing-icon landing-icon-calendar"><i class="bi bi-calendar2-check"></i></span>
+      <span class="landing-icon landing-icon-care"><i class="bi bi-emoji-smile"></i></span>
+    </div>
+  </div>
+  <div class="landing-features" aria-label="What to expect from AimSmile">
+    <article class="landing-feature">
+      <span class="landing-feature-icon"><i class="bi bi-calendar2-check" aria-hidden="true"></i></span>
+      <h2>Easy appointments</h2>
+      <p>Choose your dentist and appointment time online.</p>
+    </article>
+    <article class="landing-feature">
+      <span class="landing-feature-icon"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
+      <h2>Expert dentists</h2>
+      <p>Get care across general and specialist dentistry.</p>
+    </article>
+    <article class="landing-feature">
+      <span class="landing-feature-icon"><i class="bi bi-clipboard2-heart" aria-hidden="true"></i></span>
+      <h2>Modern care</h2>
+      <p>Digital imaging supports precise diagnosis.</p>
+    </article>
+    <article class="landing-feature">
+      <span class="landing-feature-icon"><i class="bi bi-cash-coin" aria-hidden="true"></i></span>
+      <h2>Clear pricing</h2>
+      <p>See costs before booking, with no hidden fees.</p>
+    </article>
+  </div>
+</section>
+
+<!-- STAT STRIP -->
+
+<!-- SERVICES + PRICING -->
+
+
+
+<!-- WHY CHOOSE -->
+<section class="section">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-5">
+        <div class="eyebrow mb-2">Why AimSmile</div>
+        <h2 class="section-title mb-3">A clinic that feels different</h2>
+        <p class="muted">We combine caring dentists with smart software so your whole experience — from booking to billing — is smooth and stress-free.</p>
+        <div class="d-flex flex-column gap-3 mt-4">
+          <div class="d-flex gap-3"><span class="feature-icon mb-0" style="width:46px;height:46px;font-size:1.2rem;"><i class="bi bi-diagram-3"></i></span><div><h6 class="fw-bold mb-0">Digital Tooth Charting</h6><span class="muted small">Every tooth tracked and visualised.</span></div></div>
+          <div class="d-flex gap-3"><span class="feature-icon mb-0" style="width:46px;height:46px;font-size:1.2rem;"><i class="bi bi-robot"></i></span><div><h6 class="fw-bold mb-0">Built-in AI Assistant</h6><span class="muted small">Symptom checks & instant estimates.</span></div></div>
+          <div class="d-flex gap-3"><span class="feature-icon mb-0" style="width:46px;height:46px;font-size:1.2rem;"><i class="bi bi-receipt-cutoff"></i></span><div><h6 class="fw-bold mb-0">Easy Billing</h6><span class="muted small">Clear invoices, online payments.</span></div></div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="row g-4">
+          <div class="col-sm-6"><div class="feature-card"><div class="feature-icon"><i class="bi bi-calendar2-check"></i></div><h6 class="fw-bold">Smart Scheduling</h6><p class="muted small mb-0">AI no-show prediction keeps the calendar full.</p></div></div>
+          <div class="col-sm-6"><div class="feature-card"><div class="feature-icon"><i class="bi bi-capsule-pill"></i></div><h6 class="fw-bold">e-Prescriptions</h6><p class="muted small mb-0">Printable prescriptions with dosage details.</p></div></div>
+          <div class="col-sm-6"><div class="feature-card"><div class="feature-icon"><i class="bi bi-bar-chart-line"></i></div><h6 class="fw-bold">Live Analytics</h6><p class="muted small mb-0">Revenue, growth & treatment insights.</p></div></div>
+          <div class="col-sm-6"><div class="feature-card"><div class="feature-icon"><i class="bi bi-shield-lock"></i></div><h6 class="fw-bold">Private & Secure</h6><p class="muted small mb-0">Your data stays safe and confidential.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="text-center mb-5"><div class="eyebrow mb-2">How it works</div><h2 class="section-title">Your visit in 4 simple steps</h2></div>
+    <div class="row g-4">
+      <div class="col-md-3"><div class="step"><div class="num"><i class="bi bi-calendar-plus"></i></div><h6 class="fw-bold">1. Book Online</h6><p class="muted small">Pick a dentist, service, date & time in seconds.</p></div></div>
+      <div class="col-md-3"><div class="step"><div class="num"><i class="bi bi-clipboard2-pulse"></i></div><h6 class="fw-bold">2. Get Examined</h6><p class="muted small">Digital X-ray & 3D scan for accurate diagnosis.</p></div></div>
+      <div class="col-md-3"><div class="step"><div class="num"><i class="bi bi-tooth"></i></div><h6 class="fw-bold">3. Painless Treatment</h6><p class="muted small">Gentle, modern procedures by expert hands.</p></div></div>
+      <div class="col-md-3"><div class="step"><div class="num"><i class="bi bi-emoji-laughing"></i></div><h6 class="fw-bold">4. Smile Bright</h6><p class="muted small">Leave happy with aftercare guidance.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+{% if reviews %}
+<section class="section section-alt">
+  <div class="container">
+    <div class="text-center mb-5"><div class="eyebrow mb-2">Testimonials</div><h2 class="section-title">Loved by patients</h2></div>
+    <div class="row g-4">
+      {% for review in reviews %}
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="text-warning mb-2 fs-5">{% for i in "12345"|make_list %}<i class="bi {% if forloop.counter <= review.rating %}bi-star-fill{% else %}bi-star{% endif %}"></i>{% endfor %}</div>
+          <p class="mb-3">"{{ review.comment|default:'Great experience at AimSmile!' }}"</p>
+          <div class="d-flex align-items-center gap-2 mt-auto"><div class="avatar" style="width:40px;height:40px;">{{ review.patient.initials }}</div><div><div class="fw-bold small">{{ review.patient.display_name }}</div><div class="muted" style="font-size:.72rem;"><i class="bi bi-patch-check-fill text-primary"></i> Verified Patient</div></div></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- FAQ -->
+<section class="section">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-5">
+        <div class="eyebrow mb-2">FAQ</div>
+        <h2 class="section-title mb-3">Questions? Answered.</h2>
+        <p class="muted">Can't find what you're looking for? Our friendly front desk is happy to help.</p>
+        <a href="{% url 'pages:contact' %}" class="btn-app mt-2"><i class="bi bi-headset"></i> Contact Us</a>
+      </div>
+      <div class="col-lg-7">
+        <div class="faq-item"><div class="faq-q">Does the treatment hurt? <i class="bi bi-plus-lg"></i></div><div class="faq-a">We use modern, minimally-invasive techniques and local anaesthesia to keep every procedure comfortable and virtually painless.</div></div>
+        <div class="faq-item"><div class="faq-q">How do I book an appointment? <i class="bi bi-plus-lg"></i></div><div class="faq-a">Just sign up for a free account and choose your dentist, service, date and time — it takes under a minute.</div></div>
+        <div class="faq-item"><div class="faq-q">Do you accept insurance? <i class="bi bi-plus-lg"></i></div><div class="faq-a">Yes, we accept most major insurance providers and offer UPI, card and cash payments.</div></div>
+        <div class="faq-item"><div class="faq-q">Can I get a cost estimate first? <i class="bi bi-plus-lg"></i></div><div class="faq-a">Absolutely — use our built-in AI Cost Estimator for an instant, tailored price range for any treatment.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="stat-strip d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+      <div>
+        <h2 class="text-white fw-bold mb-1">Ready for a healthier smile?</h2>
+        <p class="mb-0" style="opacity:.9;">Create your free account and book in under a minute.</p>
+      </div>
+      <a href="{% url 'accounts:signup' %}" class="btn-ghost"><i class="bi bi-person-plus"></i> Get Started Free</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll('.faq-q').forEach(q => q.addEventListener('click', () => q.parentElement.classList.toggle('open')));
+</script>
+{% endblock %}

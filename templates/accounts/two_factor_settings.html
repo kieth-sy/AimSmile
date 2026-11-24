@@ -1,0 +1,24 @@
+{% extends 'app_base.html' %}
+{% block page_title %}Two-Factor Authentication{% endblock %}
+{% block app_content %}
+<div class="card-app" style="max-width:700px">
+  {% if enabled %}
+    <span class="badge-app badge-success mb-3">2FA enabled</span>
+    <p class="muted">Enter an authenticator code to disable 2FA.</p>
+  {% else %}
+    <h5 class="fw-bold mb-3">Set up your authenticator</h5>
+    <ol class="muted">
+      <li>Install Google Authenticator or another TOTP app.</li>
+      <li>Add an account using this secret: <code>{{ secret }}</code></li>
+      <li>Enter the first six-digit code to confirm setup.</li>
+    </ol>
+  {% endif %}
+  <form method="post" class="mt-3">
+    {% csrf_token %}
+    {% include 'partials/_form.html' with form=form %}
+    <button class="btn-app" type="submit">
+      {% if enabled %}<i class="bi bi-shield-x"></i> Disable 2FA{% else %}<i class="bi bi-shield-check"></i> Enable 2FA{% endif %}
+    </button>
+  </form>
+</div>
+{% endblock %}

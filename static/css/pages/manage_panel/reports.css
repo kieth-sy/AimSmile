@@ -1,0 +1,17 @@
+.report-chart-plot {
+  height: 300px;
+}
+
+.nm-chart-well--report-small {
+  height: 260px;
+}
+
+.nm-chart-well--polar-area {
+  height: 260px;
+}
+
+@media (max-width: 575.98px) {
+  .report-chart-plot {
+    height: 260px;
+  }
+}

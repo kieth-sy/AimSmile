@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Dental Clinic Management System context diagram</title>
+  <desc id="desc">The four user roles exchange clinic data with the system. Optional external providers support email, SMS, calendar, payment checkout, and CAPTCHA validation.</desc>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2563eb"/></marker>
+    <marker id="arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#0f9f8f"/></marker>
+    <style>
+      text{font-family:Inter,"Segoe UI",Arial,sans-serif;fill:#17243b}
+      .title{font-size:34px;font-weight:800;letter-spacing:-.7px}
+      .subtitle{font-size:16px;fill:#64748b}
+      .role{fill:#fff;stroke:#cbd5e1;stroke-width:2}
+      .system{fill:#eff6ff;stroke:#2563eb;stroke-width:3}
+      .external{fill:#f5f3ff;stroke:#7c3aed;stroke-width:2}
+      .heading{font-size:20px;font-weight:800}
+      .body{font-size:15px;fill:#475569}
+      .section{font-size:12px;font-weight:800;letter-spacing:1.5px;fill:#64748b}
+      .flow{fill:none;stroke-width:2.5}
+      .flow-label{font-size:12px;font-weight:700;fill:#475569}
+      .pill{fill:#fff;stroke:#dbe4f0;stroke-width:1}
+    </style>
+  </defs>
+  <rect width="1600" height="1000" fill="#f8fafc"/>
+  <text class="title" x="800" y="58" text-anchor="middle">System Context Diagram</text>
+  <text class="subtitle" x="800" y="88" text-anchor="middle">Dental Clinic Management System · users, system boundary, and configured external services</text>
+
+  <text class="section" x="80" y="145">PEOPLE / EXTERNAL ACTORS</text>
+  <text class="section" x="600" y="145">SYSTEM BOUNDARY</text>
+  <text class="section" x="1220" y="145">OPTIONAL PROVIDERS</text>
+
+  <g>
+    <rect class="role" x="80" y="190" width="300" height="118" rx="20"/>
+    <circle cx="120" cy="230" r="20" fill="#dbeafe"/><text x="120" y="237" text-anchor="middle" font-size="19" fill="#2563eb">P</text>
+    <text class="heading" x="154" y="230">Patient</text>
+    <text class="body" x="105" y="270">Registration, bookings, bills, reviews</text>
+    <text class="body" x="105" y="292">and informational assistant requests</text>
+
+    <rect class="role" x="80" y="355" width="300" height="118" rx="20"/>
+    <circle cx="120" cy="395" r="20" fill="#ccfbf1"/><text x="120" y="402" text-anchor="middle" font-size="19" fill="#0f766e">D</text>
+    <text class="heading" x="154" y="395">Dentist</text>
+    <text class="body" x="105" y="435">Clinical records, treatment plans,</text>
+    <text class="body" x="105" y="457">prescriptions and appointment updates</text>
+
+    <rect class="role" x="80" y="520" width="300" height="118" rx="20"/>
+    <circle cx="120" cy="560" r="20" fill="#ffedd5"/><text x="120" y="567" text-anchor="middle" font-size="19" fill="#c2410c">R</text>
+    <text class="heading" x="154" y="560">Receptionist</text>
+    <text class="body" x="105" y="600">Schedules, patient records, invoices</text>
+    <text class="body" x="105" y="622">and payment verification</text>
+
+    <rect class="role" x="80" y="685" width="300" height="118" rx="20"/>
+    <circle cx="120" cy="725" r="20" fill="#ede9fe"/><text x="120" y="732" text-anchor="middle" font-size="19" fill="#7c3aed">A</text>
+    <text class="heading" x="154" y="725">Administrator</text>
+    <text class="body" x="105" y="765">Users, services, resources, inbox</text>
+    <text class="body" x="105" y="787">and analytics reports</text>
+  </g>
+
+  <g>
+    <rect class="system" x="565" y="170" width="520" height="660" rx="28"/>
+    <rect x="600" y="205" width="450" height="90" rx="18" fill="#2563eb"/>
+    <text x="825" y="242" text-anchor="middle" font-size="15" font-weight="800" fill="#dbeafe">AIMSMILE</text>
+    <text x="825" y="272" text-anchor="middle" font-size="25" font-weight="800" fill="#fff">Dental Clinic Management System</text>
+    <text class="section" x="610" y="340">CORE FUNCTIONS</text>
+    <g class="body">
+      <circle cx="620" cy="378" r="5" fill="#2563eb"/><text x="638" y="383">Accounts, role access and identity registration</text>
+      <circle cx="620" cy="423" r="5" fill="#2563eb"/><text x="638" y="428">Appointments and patient profiles</text>
+      <circle cx="620" cy="468" r="5" fill="#2563eb"/><text x="638" y="473">Tooth chart, treatments and prescriptions</text>
+      <circle cx="620" cy="513" r="5" fill="#2563eb"/><text x="638" y="518">Invoices, payments and receipts</text>
+      <circle cx="620" cy="558" r="5" fill="#2563eb"/><text x="638" y="563">Services, inventory and patient reviews</text>
+      <circle cx="620" cy="603" r="5" fill="#2563eb"/><text x="638" y="608">Contact-message inbox and email replies</text>
+      <circle cx="620" cy="648" r="5" fill="#2563eb"/><text x="638" y="653">Dashboards, reports and analytics</text>
+      <circle cx="620" cy="693" r="5" fill="#2563eb"/><text x="638" y="698">Rule-based symptom, FAQ and cost tools</text>
+      <circle cx="620" cy="738" r="5" fill="#2563eb"/><text x="638" y="743">Administrator activity and sign-in logs</text>
+    </g>
+    <rect class="pill" x="610" y="770" width="430" height="42" rx="14"/>
+    <text x="825" y="797" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">Django application · relational database · browser UI</text>
+  </g>
+
+  <g class="flow-label" text-anchor="middle">
+    <text x="470" y="218">Requests / records</text><text x="470" y="299">Pages / statuses</text>
+    <text x="470" y="383">Clinical updates</text><text x="470" y="464">Schedules / histories</text>
+    <text x="470" y="548">Front-desk updates</text><text x="470" y="629">Lists / balances</text>
+    <text x="470" y="713">Administration</text><text x="470" y="794">Reports / results</text>
+  </g>
+  <g class="flow">
+    <path d="M380 238 H565" stroke="#2563eb" marker-end="url(#arrow-blue)"/><path d="M565 279 H380" stroke="#0f9f8f" marker-end="url(#arrow-teal)"/>
+    <path d="M380 403 H565" stroke="#2563eb" marker-end="url(#arrow-blue)"/><path d="M565 444 H380" stroke="#0f9f8f" marker-end="url(#arrow-teal)"/>
+    <path d="M380 568 H565" stroke="#2563eb" marker-end="url(#arrow-blue)"/><path d="M565 609 H380" stroke="#0f9f8f" marker-end="url(#arrow-teal)"/>
+    <path d="M380 733 H565" stroke="#2563eb" marker-end="url(#arrow-blue)"/><path d="M565 774 H380" stroke="#0f9f8f" marker-end="url(#arrow-teal)"/>
+  </g>
+
+  <g>
+    <rect class="external" x="1210" y="280" width="310" height="340" rx="22"/>
+    <text class="heading" x="1365" y="322" text-anchor="middle">External providers</text>
+    <text class="body" x="1245" y="370">Email / SMTP</text>
+    <text class="body" x="1245" y="414">SMS gateway</text>
+    <text class="body" x="1245" y="458">Google Calendar</text>
+    <text class="body" x="1245" y="502">Xendit checkout</text>
+    <text class="body" x="1245" y="546">reCAPTCHA</text>
+    <line x1="1245" y1="570" x2="1485" y2="570" stroke="#ddd6fe"/>
+    <text x="1245" y="594" font-size="12" fill="#6b7280">Enabled only with provider setup</text>
+  </g>
+  <path class="flow" d="M1085 440 H1210" stroke="#7c3aed" marker-end="url(#arrow-blue)"/>
+  <path class="flow" d="M1210 480 H1085" stroke="#7c3aed" marker-end="url(#arrow-teal)"/>
+  <text class="flow-label" x="1148" y="426" text-anchor="middle">Outbound requests</text>
+  <text class="flow-label" x="1148" y="505" text-anchor="middle">Provider responses</text>
+
+  <rect x="80" y="875" width="1440" height="64" rx="16" fill="#fff" stroke="#dbe4f0"/>
+  <circle cx="112" cy="907" r="7" fill="#2563eb"/><text class="body" x="132" y="912">Data / action sent to the system</text>
+  <circle cx="420" cy="907" r="7" fill="#0f9f8f"/><text class="body" x="440" y="912">System response returned to a user</text>
+  <circle cx="790" cy="907" r="7" fill="#7c3aed"/><text class="body" x="810" y="912">Provider flow (optional, credential-dependent)</text>
+  <text x="1515" y="975" text-anchor="end" font-size="12" fill="#64748b">System boundary reflects implemented modules; external services are not assumed active.</text>
+</svg>

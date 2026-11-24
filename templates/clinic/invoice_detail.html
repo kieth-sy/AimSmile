@@ -1,0 +1,137 @@
+{% extends 'app_base.html' %}
+{% load clinic_extras %}
+{% block page_title %}Invoice {{ invoice.number }}{% endblock %}
+
+{% block app_content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card-app">
+      <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <span class="brand-badge"><i class="bi bi-hospital"></i></span>
+          <div><h5 class="fw-bold mb-0">AimSmile Clinic</h5><div class="muted small">Smile Street, Dental City</div></div>
+        </div>
+        <div class="text-end">
+          <div class="fw-bold fs-5">{{ invoice.number }}</div>
+          <span class="badge-app badge-{{ invoice.status_color }}">{{ invoice.get_status_display }}</span>
+        </div>
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-md-6"><div class="muted small">Billed To</div><div class="fw-bold">{{ invoice.patient.display_name }}</div><div class="muted small">{{ invoice.patient.email }}</div></div>
+        <div class="col-md-6 text-md-end"><div class="muted small">Issued</div><div class="fw-bold">{{ invoice.issued_date|date:"d M Y" }}</div>{% if invoice.due_date %}<div class="muted small">Due {{ invoice.due_date|date:"d M Y" }}</div>{% endif %}</div>
+      </div>
+      <table class="table-app">
+        <thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th class="text-end">Total</th></tr></thead>
+        <tbody>
+          {% for item in invoice.items.all %}
+          <tr><td>{{ item.description }}</td><td>{{ item.quantity }}</td><td>{{ item.unit_price|currency }}</td><td class="text-end fw-bold">{{ item.line_total|currency }}</td></tr>
+          {% empty %}<tr><td colspan="4" class="muted text-center">No items</td></tr>{% endfor %}
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-end mt-3">
+        <div style="min-width:260px;">
+          <div class="d-flex justify-content-between py-1"><span class="muted">Subtotal</span><span>{{ invoice.subtotal|currency }}</span></div>
+          <div class="d-flex justify-content-between py-1"><span class="muted">Tax ({{ invoice.tax_percent }}%)</span><span>{{ invoice.tax_amount|currency }}</span></div>
+          <div class="d-flex justify-content-between py-1"><span class="muted">Discount</span><span>- {{ invoice.discount|currency }}</span></div>
+          <div class="d-flex justify-content-between py-2 border-top fw-bold fs-5"><span>Total</span><span class="text-gradient">{{ invoice.total|currency }}</span></div>
+          <div class="d-flex justify-content-between py-1"><span class="muted">Paid</span><span class="text-success">{{ invoice.amount_paid|currency }}</span></div>
+          <div class="d-flex justify-content-between py-1 fw-bold"><span>Balance</span><span class="text-danger">{{ invoice.balance|currency }}</span></div>
+        </div>
+      </div>
+      <button class="btn-ghost mt-3" onclick="window.print()"><i class="bi bi-printer"></i> Print Invoice</button>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card-app mb-4">
+      <h6 class="fw-bold mb-3"><i class="bi bi-cash-coin text-gradient"></i> Payments</h6>
+      {% for p in invoice.payments.all %}
+      <div class="d-flex justify-content-between align-items-center gap-2 py-2 border-bottom small">
+        <div>
+          <div class="fw-bold">{{ p.amount|currency }}</div>
+          <div class="muted">{{ p.get_method_display }} · {% if p.status == 'pending' %}Submitted{% else %}{{ p.paid_on|date:"d M Y" }}{% endif %}</div>
+          <span class="badge-app {% if p.status == 'confirmed' %}badge-success{% elif p.status == 'pending' %}badge-warning{% else %}badge-secondary{% endif %}">{{ p.get_status_display }}</span>
+          {% if p.status == 'confirmed' %}
+          <a href="{% url 'clinic:payment_receipt' p.pk %}" class="btn-soft mt-1 d-inline-block"><i class="bi bi-receipt"></i> Receipt</a>
+          {% endif %}
+        </div>
+        {% if p.status == 'pending' %}
+          {% if user.is_admin or user.is_receptionist %}
+          <div class="d-flex gap-1">
+            <form method="post" action="{% url 'clinic:invoice_review_payment' p.pk %}">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="confirm">
+              <button class="btn-soft" type="submit" title="Confirm payment"><i class="bi bi-check2"></i></button>
+            </form>
+            <form method="post" action="{% url 'clinic:invoice_review_payment' p.pk %}">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="reject">
+              <button class="btn-soft" type="submit" title="Reject request"><i class="bi bi-x"></i></button>
+            </form>
+          </div>
+          {% endif %}
+        {% endif %}
+      </div>
+      {% empty %}<p class="muted small">No payments recorded.</p>{% endfor %}
+    </div>
+    {% if user.is_admin or user.is_receptionist %}
+    {% if invoice.balance > 0 %}
+    <div class="card-app">
+      <h6 class="fw-bold mb-3"><i class="bi bi-plus-circle text-gradient"></i> Record Payment</h6>
+      {% if xendit_enabled %}
+      <form method="post" action="{% url 'clinic:invoice_xendit_checkout' invoice.pk %}" class="mb-3">
+        {% csrf_token %}
+        <button class="btn-ghost w-100 justify-content-center" type="submit"><i class="bi bi-credit-card"></i> Create Xendit Checkout</button>
+      </form>
+      {% endif %}
+      {% if first_payment_required > 0 %}
+      <p class="muted small">The first payment must be at least {{ first_payment_required|currency }} ({{ downpayment_percent|floatformat:0 }}% downpayment).</p>
+      {% endif %}
+      <form method="post" action="{% url 'clinic:invoice_add_payment' invoice.pk %}">
+        {% csrf_token %}
+        {% include 'partials/_form.html' with form=payment_form %}
+        <button class="btn-app w-100 justify-content-center" type="submit"><i class="bi bi-check2"></i> Add Payment</button>
+      </form>
+    </div>
+    {% else %}
+    <div class="card-app text-center"><i class="bi bi-check-circle-fill text-success fs-1"></i><p class="fw-bold mt-2 mb-0">Fully Paid</p></div>
+    {% endif %}
+    {% endif %}
+    {% if user.is_patient and invoice.balance > 0 %}
+      {% if downpayment_amount > 0 %}
+      <div class="card-app">
+        <h6 class="fw-bold mb-3"><i class="bi bi-wallet2 text-gradient"></i> {{ downpayment_percent|floatformat:0 }}% Downpayment</h6>
+        <div class="d-flex justify-content-between py-1"><span class="muted">Downpayment due</span><span class="fw-bold">{{ downpayment_amount|currency }}</span></div>
+        <p class="muted small mt-2">Pay the required {{ downpayment_percent|floatformat:0 }}% downpayment first. Once confirmed, you can pay the remaining balance online. Manual payment requests need clinic staff verification.</p>
+        {% if pending_downpayment %}
+        <div class="badge-app badge-warning d-block p-2">Your {{ pending_downpayment.amount|currency }} downpayment request is awaiting staff verification.</div>
+        {% else %}
+        {% if xendit_enabled %}
+        <form method="post" action="{% url 'clinic:invoice_xendit_checkout' invoice.pk %}" class="mb-2">
+          {% csrf_token %}
+          <button class="btn-app w-100 justify-content-center" type="submit"><i class="bi bi-credit-card"></i> Pay {{ downpayment_percent|floatformat:0 }}% Downpayment Online</button>
+        </form>
+        {% endif %}
+        <form method="post" action="{% url 'clinic:invoice_add_payment' invoice.pk %}">
+          {% csrf_token %}
+          {% include 'partials/_form.html' with form=downpayment_form %}
+          <button class="btn-ghost w-100 justify-content-center" type="submit"><i class="bi bi-send"></i> Submit Manual Downpayment</button>
+        </form>
+        {% endif %}
+      </div>
+      {% else %}
+      <div class="card-app text-center">
+        <i class="bi bi-check-circle-fill text-success fs-1"></i>
+        <p class="fw-bold mt-2 mb-1">Downpayment met</p>
+        <p class="muted small mb-0">The remaining invoice balance is {{ invoice.balance|currency }}.</p>
+        {% if xendit_enabled %}
+        <form method="post" action="{% url 'clinic:invoice_xendit_checkout' invoice.pk %}" class="mt-3">
+          {% csrf_token %}
+          <button class="btn-app w-100 justify-content-center" type="submit"><i class="bi bi-credit-card"></i> Pay Remaining Balance Online</button>
+        </form>
+        {% endif %}
+      </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

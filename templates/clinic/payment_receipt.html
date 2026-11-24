@@ -1,0 +1,77 @@
+{% extends 'app_base.html' %}
+{% load clinic_extras %}
+{% block page_title %}Payment Receipt {{ receipt_number }}{% endblock %}
+{% block page_subtitle %}Payment confirmation for invoice {{ invoice.number }}{% endblock %}
+
+{% block head_extra %}
+{{ block.super }}
+<style>
+  @media print {
+    .sidebar, .topbar, .receipt-actions { display: none !important; }
+    .main, .content, .card-app { margin: 0 !important; padding: 0 !important; box-shadow: none !important; }
+  }
+</style>
+{% endblock %}
+
+{% block app_content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <section class="card-app">
+      <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-4">
+        <div>
+          <h1 class="h4 fw-bold mb-1">AimSmile Dental Clinic</h1>
+          <p class="muted mb-0">Payment Receipt</p>
+        </div>
+        <div class="text-end">
+          <div class="fw-bold">{{ receipt_number }}</div>
+          <span class="badge-app badge-success">Paid</span>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6">
+          <div class="muted small">Received from</div>
+          <div class="fw-bold">{{ invoice.patient.display_name }}</div>
+        </div>
+        <div class="col-sm-6 text-sm-end">
+          <div class="muted small">Payment date</div>
+          <div class="fw-bold">{{ payment.paid_on|date:"d M Y" }}</div>
+        </div>
+        <div class="col-sm-6">
+          <div class="muted small">Invoice</div>
+          <div class="fw-bold">{{ invoice.number }}</div>
+        </div>
+        <div class="col-sm-6 text-sm-end">
+          <div class="muted small">Payment method</div>
+          <div class="fw-bold">{{ payment.get_method_display }}</div>
+        </div>
+        {% if payment.reference %}
+        <div class="col-12">
+          <div class="muted small">Transaction reference</div>
+          <div>{{ payment.reference }}</div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center border-top border-bottom py-3">
+        <span class="fw-bold">Amount received</span>
+        <span class="fw-bold fs-3 text-gradient">{{ payment.amount|currency }}</span>
+      </div>
+      <div class="d-flex justify-content-between py-2">
+        <span class="muted">Invoice total</span>
+        <span>{{ invoice.total|currency }}</span>
+      </div>
+      <div class="d-flex justify-content-between py-2">
+        <span class="muted">Current balance</span>
+        <span class="fw-bold">{{ invoice.balance|currency }}</span>
+      </div>
+
+      <p class="muted small mt-4 mb-0">This receipt confirms a payment recorded by AimSmile Dental Clinic.</p>
+      <div class="receipt-actions d-flex gap-2 mt-4">
+        <button class="btn-app" type="button" onclick="window.print()"><i class="bi bi-printer"></i> Print Receipt</button>
+        <a class="btn-ghost" href="{% url 'clinic:invoice_detail' invoice.pk %}">Back to Invoice</a>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

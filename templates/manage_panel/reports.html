@@ -1,0 +1,77 @@
+{% extends 'app_base.html' %}
+{% load clinic_extras static %}
+{% block page_title %}Reports & Analytics{% endblock %}
+{% block page_subtitle %}Deep insights into your clinic{% endblock %}
+
+{% block head_extra %}
+<link href="{% static 'css/pages/manage_panel/reports.css' %}?v=4" rel="stylesheet">
+{% endblock %}
+
+{% block app_content %}
+
+<div class="nm-header">
+  <div>
+    <h1 class="nm-title">Analytics</h1>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-6"><div class="card-app"><h6 class="fw-bold mb-3"><i class="bi bi-cash-coin text-gradient"></i> Revenue Trend</h6><div class="report-chart-plot"><canvas id="revChart"></canvas></div></div></div>
+  <div class="col-lg-6"><div class="card-app"><h6 class="fw-bold mb-3"><i class="bi bi-people text-gradient"></i> Patient Growth</h6><div class="report-chart-plot"><canvas id="growthChart"></canvas></div></div></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card-app h-100 d-flex flex-column">
+      <h6 class="fw-bold mb-3"><i class="bi bi-pie-chart text-gradient"></i> Appointment Status</h6>
+      <div class="nm-chart-well nm-chart-well--report-small"><canvas id="statusChart"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card-app h-100 d-flex flex-column">
+      <h6 class="fw-bold mb-3"><i class="bi bi-diagram-3 text-gradient"></i> Treatment Mix</h6>
+      {% if kpis.total_treatments > 0 %}
+      <div class="nm-chart-well nm-chart-well--report-small"><canvas id="treatChart"></canvas></div>
+      {% else %}
+      <div class="flex-grow-1 d-flex align-items-center justify-content-center text-center" style="min-height:260px;">
+        <p class="muted small mb-0">No treatments recorded yet.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card-app h-100 d-flex flex-column">
+      <h6 class="fw-bold mb-3"><i class="bi bi-trophy text-gradient"></i> Top Services</h6>
+      {% if top_services %}
+      <div class="nm-chart-well nm-chart-well--report-small nm-chart-well--polar-area">
+        <canvas id="topServicesChart" role="img" aria-label="Polar area chart of treatments by service"></canvas>
+      </div>
+      {% else %}
+      <div class="flex-grow-1 d-flex align-items-center justify-content-center text-center" style="min-height:260px;">
+        <p class="muted small mb-0">No treatment or appointment data yet.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script id="revData" type="application/json">{{ revenue_json|safe }}</script>
+<script id="growthData" type="application/json">{{ growth_json|safe }}</script>
+<script id="statusData" type="application/json">{{ status_json|safe }}</script>
+<script id="treatData" type="application/json">{{ treatment_json|safe }}</script>
+{{ top_services_data|json_script:"topServicesData" }}
+{% endblock %}
+
+{% block app_scripts %}
+<script>
+  barChart('revChart', 'revData', 'Revenue', { currency: true, maxBarThickness: 36 });
+  lineChart('growthChart', 'growthData', 'Patients', false);
+  appointmentStatusChart('statusChart', 'statusData');
+  {% if kpis.total_treatments > 0 %}
+  doughnutChart('treatChart', 'treatData', { showLegend: true });
+  {% endif %}
+  {% if top_services %}
+  polarAreaChart('topServicesChart', 'topServicesData');
+  {% endif %}
+</script>
+{% endblock %}

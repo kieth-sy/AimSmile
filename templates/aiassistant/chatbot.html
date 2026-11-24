@@ -1,0 +1,102 @@
+{% extends 'public_base.html' %}
+{% load static %}
+{% block title %}DentaBot · AimSmile{% endblock %}
+
+{% block head_extra %}
+<link href="{% static 'css/pages/aiassistant/chatbot.css' %}?v=1" rel="stylesheet">
+{% endblock %}
+
+{% block public_content %}
+<section class="section" style="padding-top:3rem;">
+  <div class="container">
+    <div class="text-center mb-4">
+      <span class="pill mb-2"><i class="bi bi-chat-dots"></i> Free Local FAQ Chat</span>
+      <h1 class="section-title">Chat with DentaBot 🦷</h1>
+      <p class="muted">Ask about appointments, services, prices, and payments.</p>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <div class="card-app">
+          <div class="alert alert-info" role="note">
+            Gumagamit ito ng programmed replies sa system na ito. Walang external AI API o API key na kailangan,
+            at hindi sine-save ang chat. Hindi ito dentista at hindi nagbibigay ng diagnosis o reseta.
+          </div>
+          <div class="chat-window" id="chatWindow" aria-live="polite">
+            <div class="chat-msg bot">Hi! Ako si <b>DentaBot</b> 🦷. Maaari akong tumulong sa appointments, services, presyo, at payments. Ano ang tanong mo?</div>
+          </div>
+          <form id="chatForm" class="d-flex gap-2 mt-3">
+            {% csrf_token %}
+            <input id="chatInput" class="form-control-app" placeholder="Magtanong dito..." autocomplete="off" maxlength="2000" required>
+            <button class="btn-app" id="chatSubmit" type="submit"><i class="bi bi-send"></i></button>
+          </form>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <button class="badge-app badge-secondary border-0 quick" type="button">Paano mag-book ng appointment?</button>
+            <button class="badge-app badge-secondary border-0 quick" type="button">Anong services ang available?</button>
+            <button class="badge-app badge-secondary border-0 quick" type="button">Saan makikita ang presyo?</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const win = document.getElementById('chatWindow');
+  const form = document.getElementById('chatForm');
+  const input = document.getElementById('chatInput');
+  const submitButton = document.getElementById('chatSubmit');
+
+  function addMsg(text, who) {
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + who;
+    div.textContent = text;
+    win.appendChild(div);
+    win.scrollTop = win.scrollHeight;
+  }
+
+  async function send(message) {
+    addMsg(message, 'user');
+    const body = new URLSearchParams({ message });
+    input.disabled = true;
+    submitButton.disabled = true;
+    document.querySelectorAll('.quick').forEach(button => button.disabled = true);
+    try {
+      const res = await fetch("{% url 'aiassistant:chatbot_api' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Hindi available ang chatbot. Subukan ulit mamaya.');
+      }
+      addMsg(data.reply, 'bot');
+    } catch (e) {
+      addMsg(e.message || 'May problema. Pakisubukan ulit.', 'bot');
+    } finally {
+      input.disabled = false;
+      submitButton.disabled = false;
+      document.querySelectorAll('.quick').forEach(button => button.disabled = false);
+      input.focus();
+    }
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const msg = input.value.trim();
+    if (!msg || submitButton.disabled) return;
+    send(msg);
+    input.value = '';
+  });
+
+  document.querySelectorAll('.quick').forEach(b =>
+    b.addEventListener('click', () => {
+      if (!submitButton.disabled) send(b.textContent);
+    }));
+</script>
+{% endblock %}

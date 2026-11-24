@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Authenticator check · AimSmile{% endblock %}
+{% block head_extra %}<link href="{% static 'css/pages/auth.css' %}?v=4" rel="stylesheet">{% endblock %}
+{% block body %}
+<main class="auth-form auth-form--login">
+  <section class="auth-card">
+    <div class="auth-card-heading">
+      <span class="brand-badge"><i class="bi bi-shield-lock"></i></span>
+      <h2>Two-factor sign in</h2>
+      <p class="muted">Enter the code from your authenticator app.</p>
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      {% include 'partials/_form.html' with form=form %}
+      <button class="btn-app auth-submit w-100 justify-content-center" type="submit">Verify</button>
+    </form>
+  </section>
+</main>
+{% endblock %}

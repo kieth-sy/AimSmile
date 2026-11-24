@@ -1,0 +1,235 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2240" viewBox="0 0 1600 2240" role="img" aria-labelledby="title desc">
+  <title id="title">Dental Clinic Management System Data Flow Diagram Level 1</title>
+  <desc id="desc">Nine independent horizontal data-flow lanes connect external actors to application processes and their data stores without crossing lines.</desc>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2563eb"/></marker>
+    <marker id="arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#0f9f8f"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#64748b"/></marker>
+    <style>
+      text{font-family:Inter,"Segoe UI",Arial,sans-serif;fill:#17243b}
+      .title{font-size:33px;font-weight:800;letter-spacing:-.7px}
+      .subtitle{font-size:15px;fill:#64748b}
+      .colhead{font-size:12px;font-weight:800;letter-spacing:1.5px;fill:#64748b}
+      .lane{fill:#fff;stroke:#e2e8f0;stroke-width:1.5}
+      .actor{fill:#eff6ff;stroke:#60a5fa;stroke-width:2}
+      .process{fill:#ecfdf5;stroke:#10b981;stroke-width:2.5}
+      .store{fill:#fff7ed;stroke:#f59e0b;stroke-width:2}
+      .num{font-size:13px;font-weight:800;fill:#047857}
+      .heading{font-size:17px;font-weight:800}
+      .body{font-size:13px;fill:#475569}
+      .storeid{font-size:12px;font-weight:800;fill:#b45309}
+      .flow{fill:none;stroke-width:2.2}
+      .flowlabel{font-size:11px;font-weight:700;fill:#475569}
+      .note{font-size:12px;fill:#64748b}
+    </style>
+  </defs>
+  <rect width="1600" height="2240" fill="#f8fafc"/>
+  <text class="title" x="800" y="52" text-anchor="middle">Data Flow Diagram · Level 1</text>
+  <text class="subtitle" x="800" y="80" text-anchor="middle">Independent process lanes make the actors, records and data stores easy to trace</text>
+  <text class="colhead" x="70" y="128">EXTERNAL ACTORS</text>
+  <text class="colhead" x="540" y="128">SYSTEM PROCESSES</text>
+  <text class="colhead" x="1195" y="128">DATA STORES</text>
+
+  <!-- 1.0 Account and registration -->
+  <g>
+    <rect class="lane" x="45" y="150" width="1510" height="208" rx="18"/>
+    <rect class="actor" x="70" y="196" width="270" height="112" rx="16"/>
+    <text class="heading" x="92" y="231">Patient / staff</text>
+    <text class="body" x="92" y="258">Sign-up, sign-in, profile</text><text class="body" x="92" y="279">and identity-review actions</text>
+    <rect class="process" x="535" y="184" width="490" height="136" rx="24"/>
+    <text class="num" x="565" y="214">1.0</text><text class="heading" x="605" y="215">Accounts &amp; identity registration</text>
+    <text class="body" x="565" y="249">Authenticate · validate role access · scan ID and compare face</text>
+    <text class="body" x="565" y="275">Store protected identity data only with required consent</text>
+    <text class="body" x="565" y="300">Possible duplicate face matches go to clinic review</text>
+    <path class="flow" stroke="#2563eb" marker-end="url(#arrow-blue)" d="M340 234 H535"/>
+    <path class="flow" stroke="#0f9f8f" marker-end="url(#arrow-teal)" d="M535 276 H340"/>
+    <text class="flowlabel" x="438" y="225" text-anchor="middle">Credentials / data</text><text class="flowlabel" x="438" y="294" text-anchor="middle">Access / status</text>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1025 234 H1195"/>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1195 276 H1025"/>
+    <text class="flowlabel" x="1110" y="225" text-anchor="middle">Create / update</text><text class="flowlabel" x="1110" y="294" text-anchor="middle">Account records</text>
+    <rect class="store" x="1195" y="196" width="330" height="112" rx="6"/>
+    <text class="storeid" x="1215" y="221">D1</text><text class="heading" x="1250" y="222">Accounts &amp; identity</text>
+    <text class="body" x="1215" y="256">Users, profiles, phone verification,</text><text class="body" x="1215" y="279">identity checks and duplicate reviews</text>
+  </g>
+
+  <!-- 2.0 Appointments -->
+  <g>
+    <rect class="lane" x="45" y="370" width="1510" height="208" rx="18"/>
+    <rect class="actor" x="70" y="416" width="270" height="112" rx="16"/>
+    <text class="heading" x="92" y="451">Patient / clinic staff</text>
+    <text class="body" x="92" y="478">Book, update, confirm or</text><text class="body" x="92" y="499">cancel scheduled visits</text>
+    <rect class="process" x="535" y="404" width="490" height="136" rx="24"/>
+    <text class="num" x="565" y="434">2.0</text><text class="heading" x="605" y="435">Appointment management</text>
+    <text class="body" x="565" y="469">Check permissions and appointment details</text>
+    <text class="body" x="565" y="495">Manage dentist, service, date, time and status</text>
+    <text class="body" x="565" y="520">Optional calendar sync / notification integrations</text>
+    <path class="flow" stroke="#2563eb" marker-end="url(#arrow-blue)" d="M340 454 H535"/>
+    <path class="flow" stroke="#0f9f8f" marker-end="url(#arrow-teal)" d="M535 496 H340"/>
+    <text class="flowlabel" x="438" y="445" text-anchor="middle">Booking / changes</text><text class="flowlabel" x="438" y="514" text-anchor="middle">Schedule / status</text>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1025 454 H1195"/>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1195 496 H1025"/>
+    <text class="flowlabel" x="1110" y="445" text-anchor="middle">Create / update</text><text class="flowlabel" x="1110" y="514" text-anchor="middle">Schedule data</text>
+    <rect class="store" x="1195" y="416" width="330" height="112" rx="6"/>
+    <text class="storeid" x="1215" y="441">D2</text><text class="heading" x="1250" y="442">Appointments</text>
+    <text class="body" x="1215" y="476">Appointment, status, assigned</text><text class="body" x="1215" y="499">dentist and selected service</text>
+  </g>
+
+  <!-- 3.0 Clinical records -->
+  <g>
+    <rect class="lane" x="45" y="590" width="1510" height="208" rx="18"/>
+    <rect class="actor" x="70" y="636" width="270" height="112" rx="16"/>
+    <text class="heading" x="92" y="671">Dentist / patient</text>
+    <text class="body" x="92" y="698">Record care; review permitted</text><text class="body" x="92" y="719">patient clinical history</text>
+    <rect class="process" x="535" y="624" width="490" height="136" rx="24"/>
+    <text class="num" x="565" y="654">3.0</text><text class="heading" x="605" y="655">Clinical care records</text>
+    <text class="body" x="565" y="689">Maintain tooth conditions and treatment details</text>
+    <text class="body" x="565" y="715">Create prescriptions and prescription items</text>
+    <text class="body" x="565" y="740">Link care to patient, dentist and appointment</text>
+    <path class="flow" stroke="#2563eb" marker-end="url(#arrow-blue)" d="M340 674 H535"/>
+    <path class="flow" stroke="#0f9f8f" marker-end="url(#arrow-teal)" d="M535 716 H340"/>
+    <text class="flowlabel" x="438" y="665" text-anchor="middle">Care updates</text><text class="flowlabel" x="438" y="734" text-anchor="middle">Care history</text>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1025 674 H1195"/>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1195 716 H1025"/>
+    <text class="flowlabel" x="1110" y="665" text-anchor="middle">Create / update</text><text class="flowlabel" x="1110" y="734" text-anchor="middle">Clinical records</text>
+    <rect class="store" x="1195" y="636" width="330" height="112" rx="6"/>
+    <text class="storeid" x="1215" y="661">D3</text><text class="heading" x="1250" y="662">Clinical records</text>
+    <text class="body" x="1215" y="696">Tooth, treatment, prescription</text><text class="body" x="1215" y="719">and prescription-item records</text>
+  </g>
+
+  <!-- 4.0 Billing -->
+  <g>
+    <rect class="lane" x="45" y="810" width="1510" height="208" rx="18"/>
+    <rect class="actor" x="70" y="856" width="270" height="112" rx="16"/>
+    <text class="heading" x="92" y="891">Patient / receptionist</text>
+    <text class="body" x="92" y="918">View invoice, pay or submit</text><text class="body" x="92" y="939">a payment for verification</text>
+    <rect class="process" x="535" y="844" width="490" height="136" rx="24"/>
+    <text class="num" x="565" y="874">4.0</text><text class="heading" x="605" y="875">Billing &amp; payments</text>
+    <text class="body" x="565" y="909">Calculate invoice total, confirmed paid and balance</text>
+    <text class="body" x="565" y="935">Require initial 50% downpayment before remaining</text>
+    <text class="body" x="565" y="960">Review manual payments or process optional checkout</text>
+    <path class="flow" stroke="#2563eb" marker-end="url(#arrow-blue)" d="M340 894 H535"/>
+    <path class="flow" stroke="#0f9f8f" marker-end="url(#arrow-teal)" d="M535 936 H340"/>
+    <text class="flowlabel" x="438" y="885" text-anchor="middle">Payment / request</text><text class="flowlabel" x="438" y="954" text-anchor="middle">Balance / receipt</text>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1025 894 H1195"/>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1195 936 H1025"/>
+    <text class="flowlabel" x="1110" y="885" text-anchor="middle">Invoice / payment</text><text class="flowlabel" x="1110" y="954" text-anchor="middle">Paid / balance</text>
+    <rect class="store" x="1195" y="856" width="330" height="112" rx="6"/>
+    <text class="storeid" x="1215" y="881">D4</text><text class="heading" x="1250" y="882">Billing records</text>
+    <text class="body" x="1215" y="916">Invoices, line items and payment</text><text class="body" x="1215" y="939">method, status and reference</text>
+  </g>
+
+  <!-- 5.0 Clinic resources -->
+  <g>
+    <rect class="lane" x="45" y="1030" width="1510" height="208" rx="18"/>
+    <rect class="actor" x="70" y="1076" width="270" height="112" rx="16"/>
+    <text class="heading" x="92" y="1111">Admin / receptionist / patient</text>
+    <text class="body" x="92" y="1138">Manage resources or submit</text><text class="body" x="92" y="1159">a patient review</text>
+    <rect class="process" x="535" y="1064" width="490" height="136" rx="24"/>
+    <text class="num" x="565" y="1094">5.0</text><text class="heading" x="605" y="1095">Services, inventory &amp; reviews</text>
+    <text class="body" x="565" y="1129">Maintain public service catalog and pricing</text>
+    <text class="body" x="565" y="1155">Track stock quantities and low-stock threshold</text>
+    <text class="body" x="565" y="1180">Store patient ratings and comments</text>
+    <path class="flow" stroke="#2563eb" marker-end="url(#arrow-blue)" d="M340 1114 H535"/>
+    <path class="flow" stroke="#0f9f8f" marker-end="url(#arrow-teal)" d="M535 1156 H340"/>
+    <text class="flowlabel" x="438" y="1105" text-anchor="middle">Reviews / updates</text><text class="flowlabel" x="438" y="1174" text-anchor="middle">Catalog / status</text>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1025 1114 H1195"/>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1195 1156 H1025"/>
+    <text class="flowlabel" x="1110" y="1105" text-anchor="middle">Create / update</text><text class="flowlabel" x="1110" y="1174" text-anchor="middle">Resource data</text>
+    <rect class="store" x="1195" y="1076" width="330" height="112" rx="6"/>
+    <text class="storeid" x="1215" y="1101">D5</text><text class="heading" x="1250" y="1102">Clinic resources</text>
+    <text class="body" x="1215" y="1136">Services, inventory items</text><text class="body" x="1215" y="1159">and reviews</text>
+  </g>
+
+  <!-- 6.0 Contact messages -->
+  <g>
+    <rect class="lane" x="45" y="1250" width="1510" height="208" rx="18"/>
+    <rect class="actor" x="70" y="1296" width="270" height="112" rx="16"/>
+    <text class="heading" x="92" y="1331">Public visitor / admin</text>
+    <text class="body" x="92" y="1358">Submit inquiry; review and</text><text class="body" x="92" y="1379">write response in admin inbox</text>
+    <rect class="process" x="535" y="1284" width="490" height="136" rx="24"/>
+    <text class="num" x="565" y="1314">6.0</text><text class="heading" x="605" y="1315">Contact-message handling</text>
+    <text class="body" x="565" y="1349">Validate and store the sender's message and email</text>
+    <text class="body" x="565" y="1375">Admin drafts a reply; delivery needs configured SMTP</text>
+    <text class="body" x="565" y="1400">A reply is marked sent only after email backend accepts</text>
+    <path class="flow" stroke="#2563eb" marker-end="url(#arrow-blue)" d="M340 1334 H535"/>
+    <path class="flow" stroke="#0f9f8f" marker-end="url(#arrow-teal)" d="M535 1376 H340"/>
+    <text class="flowlabel" x="438" y="1325" text-anchor="middle">Inquiry / reply</text><text class="flowlabel" x="438" y="1394" text-anchor="middle">Acknowledgement</text>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1025 1334 H1195"/>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1195 1376 H1025"/>
+    <text class="flowlabel" x="1110" y="1325" text-anchor="middle">Save / update</text><text class="flowlabel" x="1110" y="1394" text-anchor="middle">Message history</text>
+    <rect class="store" x="1195" y="1296" width="330" height="112" rx="6"/>
+    <text class="storeid" x="1215" y="1321">D6</text><text class="heading" x="1250" y="1322">Contact messages</text>
+    <text class="body" x="1215" y="1356">Sender, subject, message, reply</text><text class="body" x="1215" y="1379">and response status</text>
+  </g>
+
+  <!-- 7.0 Informational assistant -->
+  <g>
+    <rect class="lane" x="45" y="1470" width="1510" height="208" rx="18"/>
+    <rect class="actor" x="70" y="1516" width="270" height="112" rx="16"/>
+    <text class="heading" x="92" y="1551">Patient / public visitor</text>
+    <text class="body" x="92" y="1578">Ask about symptoms, services</text><text class="body" x="92" y="1599">or estimated treatment cost</text>
+    <rect class="process" x="535" y="1504" width="490" height="136" rx="24"/>
+    <text class="num" x="565" y="1534">7.0</text><text class="heading" x="605" y="1535">Informational assistant</text>
+    <text class="body" x="565" y="1569">Apply local rules to symptoms and common questions</text>
+    <text class="body" x="565" y="1595">Estimate cost from service, complexity and tooth count</text>
+    <text class="body" x="565" y="1620">Informational support only; not a clinical diagnosis</text>
+    <path class="flow" stroke="#2563eb" marker-end="url(#arrow-blue)" d="M340 1554 H535"/>
+    <path class="flow" stroke="#0f9f8f" marker-end="url(#arrow-teal)" d="M535 1596 H340"/>
+    <text class="flowlabel" x="438" y="1545" text-anchor="middle">Question / inputs</text><text class="flowlabel" x="438" y="1614" text-anchor="middle">Guidance / estimate</text>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1195 1574 H1025"/>
+    <text class="flowlabel" x="1110" y="1565" text-anchor="middle">Read service catalog</text>
+    <rect class="store" x="1195" y="1522" width="330" height="100" rx="6"/>
+    <text class="storeid" x="1215" y="1547">D5 (read-only)</text><text class="heading" x="1215" y="1575">Service catalog</text>
+    <text class="body" x="1215" y="1599">Existing service names and prices</text>
+  </g>
+
+  <!-- 8.0 Reports -->
+  <g>
+    <rect class="lane" x="45" y="1690" width="1510" height="208" rx="18"/>
+    <rect class="actor" x="70" y="1736" width="270" height="112" rx="16"/>
+    <text class="heading" x="92" y="1771">Administrator</text>
+    <text class="body" x="92" y="1798">Request dashboard and</text><text class="body" x="92" y="1819">management summaries</text>
+    <rect class="process" x="535" y="1724" width="490" height="136" rx="24"/>
+    <text class="num" x="565" y="1754">8.0</text><text class="heading" x="605" y="1755">Reports &amp; analytics</text>
+    <text class="body" x="565" y="1789">Aggregate confirmed payments, appointments,</text>
+    <text class="body" x="565" y="1815">treatments, top services and patient growth</text>
+    <text class="body" x="565" y="1840">Read-only reporting; does not create clinic records</text>
+    <path class="flow" stroke="#2563eb" marker-end="url(#arrow-blue)" d="M340 1774 H535"/>
+    <path class="flow" stroke="#0f9f8f" marker-end="url(#arrow-teal)" d="M535 1816 H340"/>
+    <text class="flowlabel" x="438" y="1765" text-anchor="middle">Report request</text><text class="flowlabel" x="438" y="1834" text-anchor="middle">Charts / totals</text>
+    <path class="flow" stroke="#64748b" stroke-dasharray="7 5" marker-end="url(#arrow-gray)" d="M1195 1795 H1025"/>
+    <text class="flowlabel" x="1110" y="1786" text-anchor="middle">Read D1–D5</text>
+    <rect class="store" x="1195" y="1742" width="330" height="100" rx="6"/>
+    <text class="storeid" x="1215" y="1767">D1–D5 reference</text><text class="heading" x="1215" y="1795">Operational records</text>
+    <text class="body" x="1215" y="1819">Existing stores queried read-only</text>
+  </g>
+
+  <!-- 9.0 Authentication and activity audit -->
+  <g>
+    <rect class="lane" x="45" y="1910" width="1510" height="208" rx="18"/>
+    <rect class="actor" x="70" y="1956" width="270" height="112" rx="16"/>
+    <text class="heading" x="92" y="1991">Users / administrator</text>
+    <text class="body" x="92" y="2018">Sign-ins, sign-outs and selected</text><text class="body" x="92" y="2039">account or clinic actions</text>
+    <rect class="process" x="535" y="1944" width="490" height="136" rx="24"/>
+    <text class="num" x="565" y="1974">9.0</text><text class="heading" x="605" y="1975">Authentication &amp; activity auditing</text>
+    <text class="body" x="565" y="2009">Record successful / failed sign-ins and sign-outs</text>
+    <text class="body" x="565" y="2035">Capture selected admin, appointment and billing changes</text>
+    <text class="body" x="565" y="2060">Provide searchable, administrator-only event history</text>
+    <path class="flow" stroke="#2563eb" marker-end="url(#arrow-blue)" d="M340 2004 H535"/>
+    <path class="flow" stroke="#0f9f8f" marker-end="url(#arrow-teal)" d="M535 2046 H340"/>
+    <text class="flowlabel" x="438" y="1995" text-anchor="middle">Authentication / activity</text><text class="flowlabel" x="438" y="2064" text-anchor="middle">Access / audit history</text>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1025 2004 H1195"/>
+    <path class="flow" stroke="#64748b" marker-end="url(#arrow-gray)" d="M1195 2046 H1025"/>
+    <text class="flowlabel" x="1110" y="1995" text-anchor="middle">Create audit record</text><text class="flowlabel" x="1110" y="2064" text-anchor="middle">Read filtered history</text>
+    <rect class="store" x="1195" y="1956" width="330" height="112" rx="6"/>
+    <text class="storeid" x="1215" y="1981">D7</text><text class="heading" x="1250" y="1982">Activity logs</text>
+    <text class="body" x="1215" y="2016">Actor, event, safe summary, target,</text><text class="body" x="1215" y="2039">IP address and timestamp</text>
+  </g>
+
+  <g>
+    <line x1="75" y1="2170" x2="130" y2="2170" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrow-blue)"/><text class="note" x="142" y="2175">Actor submits data / request</text>
+    <line x1="390" y1="2170" x2="445" y2="2170" stroke="#0f9f8f" stroke-width="2.5" marker-end="url(#arrow-teal)"/><text class="note" x="457" y="2175">System response</text>
+    <line x1="650" y1="2170" x2="705" y2="2170" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrow-gray)"/><text class="note" x="717" y="2175">Data read / write</text>
+    <text class="note" x="1525" y="2175" text-anchor="end">D5 reuses Service / Inventory / Review; D7 is the audit store. Reporting reads operational stores.</text>
+  </g>
+</svg>

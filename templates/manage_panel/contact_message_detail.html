@@ -1,0 +1,52 @@
+{% extends 'app_base.html' %}
+{% block page_title %}Contact Message{% endblock %}
+{% block page_subtitle %}Review the patient's message and reply by email{% endblock %}
+
+{% block app_content %}
+<div class="row g-4">
+  <div class="col-lg-7">
+    <section class="card-app">
+      <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+        <div>
+          <h5 class="fw-bold mb-1">{{ contact_message.subject|default:"No subject" }}</h5>
+          <div class="muted">From {{ contact_message.name }} · <a href="mailto:{{ contact_message.email }}">{{ contact_message.email }}</a></div>
+        </div>
+        {% if contact_message.status == 'replied' %}
+        <span class="badge-app badge-success">Replied</span>
+        {% else %}
+        <span class="badge-app badge-warning">Pending</span>
+        {% endif %}
+      </div>
+      <div class="muted small mb-2">Received {{ contact_message.created_at|date:"M j, Y · g:i A" }}</div>
+      <div class="card-app" style="white-space:pre-wrap;">{{ contact_message.message }}</div>
+
+      {% if contact_message.reply %}
+      <div class="mt-4">
+        <h6 class="fw-bold">Previous reply</h6>
+        <div class="card-app" style="white-space:pre-wrap;">{{ contact_message.reply }}</div>
+        {% if contact_message.replied_at %}
+        <div class="muted small mt-2">Sent {{ contact_message.replied_at|date:"M j, Y · g:i A" }}{% if contact_message.replied_by %} by {{ contact_message.replied_by.display_name }}{% endif %}</div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </section>
+  </div>
+
+  <div class="col-lg-5">
+    <section class="card-app">
+      <h5 class="fw-bold mb-3">Reply to {{ contact_message.name }}</h5>
+      <p class="muted small">Your reply will be emailed to <strong>{{ contact_message.email }}</strong>.</p>
+      <form method="post" action="{% url 'manage_panel:contact_message_reply' contact_message.pk %}">
+        {% csrf_token %}
+        <label class="form-label-app" for="{{ form.reply.id_for_label }}">Reply</label>
+        {{ form.reply }}
+        {{ form.reply.errors }}
+        <div class="d-flex gap-2 mt-3">
+          <button type="submit" class="btn-app"><i class="bi bi-send"></i> Send Email Reply</button>
+          <a href="{% url 'manage_panel:contact_message_list' %}" class="btn-ghost">Back</a>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>
+{% endblock %}

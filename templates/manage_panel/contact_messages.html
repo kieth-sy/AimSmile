@@ -1,0 +1,39 @@
+{% extends 'app_base.html' %}
+{% block page_title %}Contact Messages{% endblock %}
+{% block page_subtitle %}Messages submitted through the public contact form{% endblock %}
+
+{% block app_content %}
+<div class="card-app">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>{{ pending_count }} awaiting reply</div>
+  </div>
+  <div class="table-responsive">
+    <table class="table-app">
+      <thead>
+        <tr><th>Received</th><th>From</th><th>Subject</th><th>Status</th><th class="text-end">Action</th></tr>
+      </thead>
+      <tbody>
+        {% for contact_message in contact_messages %}
+        <tr>
+          <td>{{ contact_message.created_at|date:"M j, Y · g:i A" }}</td>
+          <td>{{ contact_message.name }}<br><span class="muted small">{{ contact_message.email }}</span></td>
+          <td>{{ contact_message.subject|default:"No subject" }}</td>
+          <td>
+            {% if contact_message.status == 'replied' %}
+            <span class="badge-app badge-success">Replied</span>
+            {% else %}
+            <span class="badge-app badge-warning">Pending</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <a class="btn-soft" href="{% url 'manage_panel:contact_message_detail' contact_message.pk %}">Open</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center py-5 muted"><i class="bi bi-envelope fs-1 d-block mb-2"></i>No contact messages yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

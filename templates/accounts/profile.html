@@ -1,0 +1,59 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+{% block head_extra %}
+<link href="{% static 'css/pages/accounts/profile.css' %}?v=1" rel="stylesheet">
+{% endblock %}
+
+{% block page_title %}My Profile{% endblock %}
+{% block page_subtitle %}Manage your personal information{% endblock %}
+
+{% block app_content %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card-app text-center">
+      <div class="avatar avatar-lg mx-auto mb-3">
+        {% if user.avatar %}<img src="{{ user.avatar.url }}" alt="">{% else %}{{ user.initials }}{% endif %}
+      </div>
+      <h5 class="fw-bold mb-0">{{ user.display_name }}</h5>
+      <span class="role-chip mt-2"><i class="bi {{ active_theme.icon }}"></i>{{ user.get_role_display }}</span>
+      <div class="mt-3 text-start small muted">
+        <div class="mb-1"><i class="bi bi-envelope me-2"></i>{{ user.email|default:'—' }}</div>
+        <div class="mb-1"><i class="bi bi-telephone me-2"></i>{{ user.phone|default:'—' }}</div>
+        <div><i class="bi bi-geo-alt me-2"></i>{{ user.address|default:'—' }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card-app">
+      <h5 class="fw-bold mb-3"><i class="bi bi-person-gear text-gradient"></i> Edit Profile</h5>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6">{% include 'partials/_form.html' with form=form %}</div>
+        </div>
+        <button class="btn-app" type="submit"><i class="bi bi-check2"></i> Save Changes</button>
+      </form>
+    </div>
+    <div class="card-app mt-4">
+      <h5 class="fw-bold mb-3"><i class="bi bi-shield-lock text-gradient"></i> Account security</h5>
+      <p class="muted small mb-3">Use a TOTP authenticator app as a second sign-in factor.</p>
+      <a href="{% url 'accounts:two_factor_settings' %}" class="btn-app">
+        <i class="bi bi-phone"></i> Configure 2FA
+      </a>
+    </div>
+    {% if user.is_patient %}
+    <div class="card-app mt-4">
+      <h5 class="fw-bold mb-2"><i class="bi bi-person-badge text-gradient"></i> Duplicate-patient protection</h5>
+      {% if identity_enrolled %}
+      <p class="muted small mb-3">Your protected ID fingerprint and encrypted face template are enrolled. Original images are not retained.</p>
+      <a href="{% url 'accounts:identity_enrollment' %}" class="btn-app">Manage identity enrollment</a>
+      {% else %}
+      <p class="muted small mb-3">Enroll with your consent so the clinic can check for duplicate patient accounts.</p>
+      <a href="{% url 'accounts:identity_enrollment' %}" class="btn-app">Enroll ID and face</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

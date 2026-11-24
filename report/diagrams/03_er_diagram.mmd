@@ -1,0 +1,272 @@
+%% ERD derived from the accounts, clinic, and pages application models.
+%% Django auth groups/permissions and framework session/migration tables are omitted.
+%% Patient/dentist role limits are application-level filters, not database constraints.
+%% InventoryItem has no foreign keys and is therefore shown as an independent entity.
+erDiagram
+    USER {
+        int id PK
+        string username UK
+        string password
+        string first_name
+        string last_name
+        string email
+        string role
+        string phone
+        string gender
+        date date_of_birth
+        string address
+        string avatar
+        text bio
+        boolean is_superuser
+        boolean is_staff
+        boolean is_active
+        datetime last_login
+        datetime date_joined
+        string signup_status
+        boolean totp_enabled
+        string rekognition_face_id
+    }
+
+    IDENTITY_VERIFICATION {
+        int id PK
+        int user_id FK,UK
+        string id_type
+        datetime consented_at
+        datetime duplicate_check_consented_at
+        string id_number_digest UK
+        bytes face_template
+        datetime verified_at
+    }
+
+    PHONE_VERIFICATION {
+        int id PK
+        int user_id FK,UK
+        string code_hash
+        datetime expires_at
+        datetime last_sent_at
+        int attempts
+    }
+
+    SIGNUP_DUPLICATE_REPORT {
+        int id PK
+        int candidate_user_id FK,nullable
+        int matched_user_id FK,nullable
+        int reviewed_by_id FK,nullable
+        string first_name
+        string last_name
+        string email
+        string phone
+        float match_similarity
+        datetime reviewed_at
+        datetime created_at
+    }
+
+    CONTACT_MESSAGE {
+        int id PK
+        string name
+        string email
+        string subject
+        text message
+        string status
+        text reply
+        int replied_by_id FK,nullable
+        datetime created_at
+        datetime replied_at
+    }
+
+    ACTIVITY_LOG {
+        int id PK
+        int actor_id FK,nullable
+        string actor_username
+        string action
+        string summary
+        string target_type
+        string target_id
+        string target_label
+        string ip_address
+        datetime created_at
+    }
+
+    PATIENT_PROFILE {
+        int id PK
+        int user_id FK,UK
+        string patient_code UK
+        string blood_group
+        string emergency_contact
+        string allergies
+        text medical_history
+        date registered_on
+    }
+
+    DOCTOR_PROFILE {
+        int id PK
+        int user_id FK,UK
+        string specialization
+        string license_no
+        int experience_years
+        decimal consultation_fee
+        string available_days
+        decimal rating
+        boolean is_available
+    }
+
+    SERVICE {
+        int id PK
+        string name
+        text description
+        decimal price
+        int duration_minutes
+        string icon
+        string image
+        boolean is_active
+    }
+
+    APPOINTMENT {
+        int id PK
+        int patient_id FK
+        int dentist_id FK "nullable; assigned dentist"
+        int service_id FK "nullable"
+        date date
+        time time
+        string status
+        string reason
+        text notes
+        int no_show_risk
+        datetime created_at
+    }
+
+    TOOTH_RECORD {
+        int id PK
+        int patient_id FK
+        int tooth_number
+        string condition
+        string note
+        datetime updated_at
+    }
+
+    TREATMENT_RECORD {
+        int id PK
+        int patient_id FK
+        int dentist_id FK "nullable; dentist"
+        int appointment_id FK "nullable"
+        int service_id FK "nullable"
+        int tooth_number "nullable"
+        text description
+        decimal cost
+        date date
+        boolean is_completed
+    }
+
+    PRESCRIPTION {
+        int id PK
+        int patient_id FK
+        int dentist_id FK "nullable; dentist"
+        int appointment_id FK "nullable"
+        date date
+        string diagnosis
+        text notes
+    }
+
+    PRESCRIPTION_ITEM {
+        int id PK
+        int prescription_id FK
+        string medicine
+        string dosage
+        string frequency
+        string duration
+        string instructions
+    }
+
+    INVOICE {
+        int id PK
+        string number UK
+        int patient_id FK
+        int appointment_id FK,nullable
+        date issued_date
+        date due_date "nullable"
+        decimal tax_percent
+        decimal discount
+        string status
+        string notes
+    }
+
+    INVOICE_ITEM {
+        int id PK
+        int invoice_id FK
+        string description
+        int quantity
+        decimal unit_price
+    }
+
+    PAYMENT {
+        int id PK
+        int invoice_id FK
+        decimal amount
+        string method
+        date paid_on
+        string reference
+        string status
+    }
+
+    INVENTORY_ITEM {
+        int id PK
+        string name
+        string category
+        int quantity
+        string unit
+        int reorder_level
+        decimal unit_price
+        string supplier
+        string icon
+    }
+
+    REVIEW {
+        int id PK
+        int patient_id FK
+        int dentist_id FK "nullable; dentist"
+        int rating
+        text comment
+        datetime created_at
+        boolean is_public
+    }
+
+    CLINIC_GOOGLE_CALENDAR_CONNECTION {
+        int id PK
+        string google_calendar_credentials
+        int connected_by_id FK,nullable
+        datetime updated_at
+    }
+
+    USER ||--o| PATIENT_PROFILE : "user_id (one-to-one)"
+    USER ||--o| DOCTOR_PROFILE : "user_id (one-to-one)"
+    USER ||--o| IDENTITY_VERIFICATION : "user_id (consented one-to-one)"
+    USER ||--o| PHONE_VERIFICATION : "user_id (one-to-one)"
+    USER o|--o{ SIGNUP_DUPLICATE_REPORT : "candidate_user_id"
+    USER o|--o{ SIGNUP_DUPLICATE_REPORT : "matched_user_id"
+    USER o|--o{ SIGNUP_DUPLICATE_REPORT : "reviewed_by_id"
+    USER o|--o{ CONTACT_MESSAGE : "replied_by_id"
+    USER o|--o{ ACTIVITY_LOG : "actor_id"
+    USER o|--o{ CLINIC_GOOGLE_CALENDAR_CONNECTION : "connected_by_id"
+
+    USER ||--o{ APPOINTMENT : "patient_id (required)"
+    USER o|--o{ APPOINTMENT : "dentist_id (optional)"
+    SERVICE o|--o{ APPOINTMENT : "service_id (optional)"
+
+    USER ||--o{ TOOTH_RECORD : "patient_id"
+    USER ||--o{ TREATMENT_RECORD : "patient_id"
+    USER o|--o{ TREATMENT_RECORD : "dentist_id (optional)"
+    APPOINTMENT o|--o{ TREATMENT_RECORD : "appointment_id (optional)"
+    SERVICE o|--o{ TREATMENT_RECORD : "service_id (optional)"
+
+    USER ||--o{ PRESCRIPTION : "patient_id"
+    USER o|--o{ PRESCRIPTION : "dentist_id (optional)"
+    APPOINTMENT o|--o{ PRESCRIPTION : "appointment_id (optional)"
+    PRESCRIPTION ||--o{ PRESCRIPTION_ITEM : "prescription_id"
+
+    USER ||--o{ INVOICE : "patient_id"
+    APPOINTMENT o|--o{ INVOICE : "appointment_id (optional)"
+    INVOICE ||--o{ INVOICE_ITEM : "invoice_id"
+    INVOICE ||--o{ PAYMENT : "invoice_id"
+
+    USER ||--o{ REVIEW : "patient_id"
+    USER o|--o{ REVIEW : "dentist_id (optional)"
